@@ -138,8 +138,8 @@ export default function TermsOfService() {
               For any questions regarding these Terms of Service, please contact us at:
             </p>
             <p className="mb-4 leading-relaxed">
-              Abyss Studios Private Limited<br />
-              Email: contact@abyssstudios.site<br />
+              Abyss Studios<br />
+              Email: contactus@abyssstudios.site<br />
             </p>
           </section>
         </div>

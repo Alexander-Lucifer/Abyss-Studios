@@ -79,7 +79,7 @@ export default function Footer({ handleNavClick }: FooterProps) {
         <div className="pt-8 border-t border-[#DC143C]/20">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-white/60 text-sm">
-              © 2025 Abyss Studios Private Limited. All rights reserved.
+              © 2025 Abyss Studios. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <a href="/privacy-policy" className="text-white/60 hover:text-[#DC143C] transition-colors duration-300 text-sm">
