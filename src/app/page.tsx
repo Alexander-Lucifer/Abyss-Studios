@@ -69,7 +69,7 @@ export default function Home() {
                     Our Story
                   </h3>
                   <p className="text-white/80 mb-6 leading-relaxed">
-                    Abyss Studios Private Limited, founded in 2022 by Mr. Suryanshu Mittal as an indie game studio (then known as Underworld Indie Games), began its full operations in 2024. Our journey started with a simple yet powerful vision: to create immersive gaming experiences that push the boundaries of entertainment.
+                    Abyss Studios, founded in 2022 by Mr. Suryanshu Mittal as an indie game studio (then known as Underworld Indie Games), began its full operations in 2024. Our journey started with a simple yet powerful vision: to create immersive gaming experiences that push the boundaries of entertainment.
                   </p>
                   <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent to-[#DC143C] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right"></div>
                 </div>
@@ -178,7 +178,6 @@ export default function Home() {
             {[
               { name: "Suryanshu Mittal", image: "/images/surya.jpg", role: "Founder and Game Director" },
               { name: "Daksh Kaushik", image: "/images/Daksh.jpg", role: "Director of Animation and 3D" },
-              { name: "Rijul Paul", image: "/images/rijul.png", role: "Director of Production" },
             ].map((member, index) => (
               <div key={index} className="group relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#DC143C]/20 to-transparent rounded-xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
