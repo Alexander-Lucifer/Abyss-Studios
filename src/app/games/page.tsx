@@ -193,7 +193,41 @@ const games = [
     brief: "",
     genre: "Coming Soon",
     alt: "https://the-abyss-games.itch.io/"
-  }
+  },
+  {
+    name: "Tiles & Towers Demo",
+    image: "https://img.itch.zone/aW1nLzIzNTcxMjI1LnBuZw==/315x250%23c/Q%2B1%2Fg1.png",
+    brief: "Roll your Fate or Suffer",
+    genre: "Board, Strategy,Jam,RNG,Windows,Mac,Web",
+    alt: "https://abyss-studios.itch.io/tiles-towers",
+    version: "1.0.0",
+    systemRequirements: {
+      minimum: [
+        "OS: Windows 7 or later or Mac OS X 10.9+",
+        "Processor: Intel Core i3 or equivalent or Apple Silicon",
+        "Memory: 2 GB RAM",
+        "Graphics: DirectX 11 compatible GPU",
+        "Storage: 50 MB available space"
+      ],
+      recommended: [
+        "OS: Windows 10 or later or Mac OS X 10.14+",
+        "Processor: Intel Core i5 or equivalent or Apple Silicon",
+        "Memory: 2 GB RAM",
+        "Graphics: Internal",
+        "Storage: 100 MB available space"
+      ]
+    },
+    downloadLinks: {
+      itch: "https://abyss-studios.itch.io/tiles-towers"
+    },
+    credits: {
+      developers: ["Suryanshu Mittal"],
+      artists: ["Daksh Kaushik"],
+      designers: ["Suryanshu Mittal"],
+      writers: ["Suryanshu Mittal"],
+      specialThanks: ["GameDev.in Community"]
+    }
+  },
 ];
 
 const categories = ["All", "Platformer", "RPG", "Mobile", "Arcade", "Windows", "Jam"];
