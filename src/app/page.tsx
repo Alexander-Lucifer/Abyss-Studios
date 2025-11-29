@@ -113,9 +113,9 @@ export default function Home() {
           <h2 className="section-title">Featured Games</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              {name: "Rusted Hearts", image: "/images/RustedHearts.png", breif: "True Love Prevails Time", genre:"RPG,Puzzle Platformer,Mobile", alt:"https://rh.abyssstudios.site/"},
+              {name: "Tiles & Towers", image: "/images/Tiles.png", breif: "Roll Your Fate", genre:"Puzzle, Board, Strategy, Windows, Mac, Web", alt:"https://abyss-studios.itch.io/tiles-towers"},
               {name: "Mansion of Chaos", image: "/images/moc.png", breif: "An Immersive First-Person Explorer", genre:"Exploration,Sombre,Jam,Windows", alt:"https://the-abyss-games.itch.io/mansion-of-chaos"},
-              {name:"Seek a Little", image:"/images/sal.png", breif:"Survive the Onslaught...and never blink!", genre:"Exploration,Thriller,Jam,Windows", alt:"https://the-abyss-games.itch.io/seek-a-little"},
+              {name:"Finite Samsara", image:"/images/Samsara.png", breif:"The Loop Remains Untouched", genre:"First-Person,Thriller,Jam,Windows, Puzzle", alt:"https://abyss-studios.itch.io/finite-samsara"},
             ].map((game, index) => (
               <div key={index} className="group relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#DC143C]/20 to-transparent rounded-xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
