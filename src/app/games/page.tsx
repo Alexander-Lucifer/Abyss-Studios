@@ -188,15 +188,8 @@ const games = [
     alt: "https://abyssstudios.site/"
   },
   {
-    name: "Coming Soon",
-    image: "/images/soon.jpeg",
-    brief: "",
-    genre: "Coming Soon",
-    alt: "https://the-abyss-games.itch.io/"
-  },
-  {
     name: "Tiles & Towers Demo",
-    image: "https://img.itch.zone/aW1nLzIzNTcxMjI1LnBuZw==/315x250%23c/Q%2B1%2Fg1.png",
+    image: "/images/Tiles.png",
     brief: "Roll your Fate or Suffer",
     genre: "Board, Strategy,Jam,RNG,Windows,Mac,Web",
     alt: "https://abyss-studios.itch.io/tiles-towers",
@@ -227,6 +220,47 @@ const games = [
       writers: ["Suryanshu Mittal"],
       specialThanks: ["GameDev.in Community"]
     }
+  },
+  {
+    name: "Finite Samsara Demo",
+    image: "/images/Samsara.png",
+    brief: "Loop Remains Untouched",
+    genre: "Windows,Unreal Engine, Jam, RPG, Indie",
+    alt: "https://abyss-studios.itch.io/finite-samsara",
+    version: "1.0.0",
+    systemRequirements: {
+      minimum: [
+        "OS: Windows 10 or later",
+        "Processor: Intel Core i3 or equivalent",
+        "Memory: 4 GB RAM",
+        "Graphics: DirectX 11 compatible GPU",
+        "Storage: 500 MB available space"
+      ],
+      recommended: [
+        "OS: Windows 10 or later",
+        "Processor: Intel Core i5 or equivalent",
+        "Memory: 8 GB RAM",
+        "Graphics: DirectX 12 compatible GPU",
+        "Storage: 1 GB available space"
+      ]
+    },
+    downloadLinks: {
+      itch: "https://abyss-studios.itch.io/finite-samsara"
+    },
+    credits: {
+      developers: ["Suryanshu Mittal"],
+      artists: ["Suryanshu Mittal"],
+      designers: ["Suryanshu Mittal"],
+      writers: ["Suryanshu Mittal"],
+      specialThanks: ["Unreal Engine Community, MegaJam, Diversion, Weloveindies"]
+    }
+  },
+  {
+    name: "Coming Soon",
+    image: "/images/soon.jpeg",
+    brief: "",
+    genre: "Coming Soon",
+    alt: "https://the-abyss-games.itch.io/"
   },
 ];
 
