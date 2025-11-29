@@ -184,7 +184,7 @@ const games = [
     name: "Rusted Hearts",
     image: "/images/RustedHearts.png",
     brief: "",
-    genre: "Coming Soon,Mobile,Puzzle Platformer",
+    genre: "Coming Soon (On-Hold),Windows,Puzzle Platformer",
     alt: "https://abyssstudios.site/"
   },
   {
