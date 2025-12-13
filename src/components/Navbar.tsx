@@ -60,7 +60,7 @@ export default function Navbar() {
           <div className="flex-shrink-0 relative group">
             <div className="absolute inset-0 bg-gradient-to-r from-[#DC143C]/20 to-transparent rounded-lg blur-xl group-hover:blur-2xl transition-all duration-500"></div>
             <Link href="/" className="relative block transition-transform duration-300 hover:scale-105">
-              <Image src="/images/ABYSS.png" alt="ABYSS" width={75} height={55} className="drop-shadow-[0_0_8px_rgba(220,20,60,0.3)]" />
+              <Image src="/images/ABYSS.svg" alt="ABYSS" width={45} height={45} className="drop-shadow-[0_0_8px_rgba(220,20,60,0.3)]" />
             </Link>
           </div>
 

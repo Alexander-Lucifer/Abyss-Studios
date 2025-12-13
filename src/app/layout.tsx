@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Orbitron } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -8,6 +9,10 @@ import { Analytics } from '@/components/analytics';
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-orbitron" });
+const eurostile = localFont({
+  src: "../../public/fonts/EurostileExtendedBlack.ttf",
+  variable: "--font-eurostile",
+});
 
 export const metadata: Metadata = {
   title: 'Abyss Studios | Indie Game Development Studio in India',
@@ -94,7 +99,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className={`${inter.variable} ${orbitron.variable} font-sans`}>
+      <body className={`${inter.variable} ${orbitron.variable} ${eurostile.variable} font-sans`}>
         <Analytics />
         <SpeedInsights />
         <Navbar />

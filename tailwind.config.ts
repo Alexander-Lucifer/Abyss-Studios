@@ -13,7 +13,8 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        sans: ['var(--font-inter)'],
+        sans: ['var(--font-eurostile)', 'var(--font-inter)'],
+        eurostile: ['var(--font-eurostile)'],
         orbitron: ['var(--font-orbitron)'],
       },
       backgroundImage: {
