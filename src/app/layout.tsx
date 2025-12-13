@@ -10,7 +10,7 @@ import { Analytics } from '@/components/analytics';
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-orbitron" });
 const eurostile = localFont({
-  src: "../../public/fonts/EurostileExtendedBlack.ttf",
+  src: "./fonts/EurostileExtendedBlack.ttf",
   variable: "--font-eurostile",
 });
 
