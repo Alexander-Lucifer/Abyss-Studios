@@ -5,6 +5,9 @@ import Navbar from '@/components/Navbar';
 import React, { useState } from 'react';
 import TechBackground from '@/components/TechBackground';
 import Footer from '@/components/Footer';
+export const metadata = {
+  title: 'Contact Us | Abyss Studios',
+}
 
 export default function Contact() {
   const [formData, setFormData] = useState({

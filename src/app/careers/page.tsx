@@ -5,7 +5,9 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TechBackground from '@/components/TechBackground';
 import Image from 'next/image';
-
+export const metadata = {
+  title: 'Careers | Abyss Studios',
+}
 interface JobPosition {
   title: string;
   department: string;

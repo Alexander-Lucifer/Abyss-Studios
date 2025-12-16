@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     siteName: 'Abyss Studios',
     images: [
       {
-        url: '/images/ABYSS.png',
+        url: '/images/Signature.svg',
         width: 1200,
         height: 630,
         alt: 'Abyss Studios - Game Development Studio',
