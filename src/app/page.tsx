@@ -26,13 +26,12 @@ export default function Home() {
   return (
     <main className="relative min-h-screen">
       <TechBackground />
-      <Background />
       <Navbar />
       
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center px-4">
         <div className="text-center z-10">
-          <h1 className="font-eurostile text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-[#DC143C] to-[#B01030] bg-clip-text text-transparent tracking-wider">
+          <h1 className="font-eurostile text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-[#DC143C] to-[#B01030] bg-clip-text text-transparent tracking-wider">
             ABYSS STUDIOS
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-white/80 max-w-2xl mx-auto">

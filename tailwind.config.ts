@@ -13,9 +13,8 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        sans: ['var(--font-eurostile)', 'var(--font-inter)'],
+        sans: ['var(--font-eurostile)'],
         eurostile: ['var(--font-eurostile)'],
-        orbitron: ['var(--font-orbitron)'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

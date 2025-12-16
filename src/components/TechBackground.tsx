@@ -24,6 +24,18 @@ export default function TechBackground() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Palette to use across the background (grey, white, crimson)
+    const palette = ['#A5A5A5', '#FFFFFF', '#AA110A'];
+
+    const hexToRgba = (hex: string, alpha = 1) => {
+      const h = hex.replace('#', '');
+      const bigint = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    };
+
     // Set canvas size
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -111,10 +123,9 @@ export default function TechBackground() {
         if (point.x < 0 || point.x > canvas.width) point.vx *= -1;
         if (point.y < 0 || point.y > canvas.height) point.vy *= -1;
 
-        // Draw point with crimson color
-        const baseHue = 348;
-        const hue = (baseHue + point.hue + Math.sin(time + i) * 10) % 360;
-        ctx.fillStyle = `hsla(${hue}, 100%, 50%, 0.8)`;
+        // Draw point with palette color (cycled per point)
+        const color = palette[i % palette.length];
+        ctx.fillStyle = hexToRgba(color, 0.8);
         ctx.beginPath();
         ctx.arc(point.x, point.y, point.size, 0, Math.PI * 2);
         ctx.fill();
@@ -122,7 +133,7 @@ export default function TechBackground() {
         // Draw constellation connections
         point.connections.forEach(connectionIndex => {
           const connectedPoint = points[connectionIndex];
-          ctx.strokeStyle = `hsla(${hue}, 100%, 50%, 0.3)`;
+          ctx.strokeStyle = hexToRgba(color, 0.28);
           ctx.lineWidth = 0.5;
           ctx.beginPath();
           ctx.moveTo(point.x, point.y);
@@ -140,7 +151,7 @@ export default function TechBackground() {
 
           if (distance < 150) { // Increased connection distance
             const opacity = (1 - distance / 150) * 0.15;
-            ctx.strokeStyle = `hsla(${hue}, 100%, 50%, ${opacity})`;
+            ctx.strokeStyle = hexToRgba(color, opacity);
             ctx.lineWidth = 0.5;
             ctx.beginPath();
             ctx.moveTo(point.x, point.y);
@@ -161,7 +172,7 @@ export default function TechBackground() {
         const x = centerX + Math.cos(angle) * radius;
         const y = centerY + Math.sin(angle) * radius;
 
-        ctx.strokeStyle = `hsla(348, 100%, 50%, 0.1)`;
+        ctx.strokeStyle = hexToRgba(palette[0], 0.08);
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(x, y, radius * 0.2, 0, Math.PI * 2);
@@ -169,7 +180,7 @@ export default function TechBackground() {
       }
 
       // Draw sine wave
-      ctx.strokeStyle = 'hsla(348, 100%, 50%, 0.1)';
+      ctx.strokeStyle = hexToRgba(palette[0], 0.08);
       ctx.lineWidth = 2;
       ctx.beginPath();
       for (let x = 0; x < canvas.width; x += 5) {

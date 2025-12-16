@@ -1,12 +1,15 @@
-'use client';
+"use client";
 
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface FooterProps {
   handleNavClick?: (sectionId: string) => void;
 }
 
 export default function Footer({ handleNavClick }: FooterProps) {
+  const router = useRouter();
   return (
     <footer className="relative py-12 px-4 overflow-hidden">
       {/* Background Effects */}
@@ -32,15 +35,35 @@ export default function Footer({ handleNavClick }: FooterProps) {
               Quick Links
             </h3>
             <div className="flex flex-col space-y-2">
-              {['Games', 'About', 'Team', 'Contact'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => handleNavClick?.(item.toLowerCase())}
-                  className="text-white/60 hover:text-[#DC143C] transition-colors duration-300 text-left"
-                >
-                  {item}
-                </button>
-              ))}
+              {['Games', 'About', 'Team', 'Contact'].map((item) => {
+                if (item === 'Games') {
+                  return (
+                    <Link
+                      key={item}
+                      href="/games"
+                      className="relative text-white/60 hover:text-[#DC143C] transition-colors duration-300 text-left"
+                    >
+                      {item}
+                    </Link>
+                  );
+                }
+
+                const handleClick = () => {
+                  const id = item.toLowerCase();
+                  if (handleNavClick) return handleNavClick(id);
+                  router.push(`/about#${id}`);
+                };
+
+                return (
+                  <button
+                    key={item}
+                    onClick={handleClick}
+                    className="relative text-white/60 hover:text-[#DC143C] transition-colors duration-300 text-left"
+                  >
+                    {item}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

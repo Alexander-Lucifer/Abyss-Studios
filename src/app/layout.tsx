@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter, Orbitron } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -7,8 +6,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 //import { Analytics } from "@vercel/analytics/react"
 import { Analytics } from '@/components/analytics';
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-orbitron" });
 const eurostile = localFont({
   src: "./fonts/EurostileExtendedBlack.ttf",
   variable: "--font-eurostile",
@@ -99,7 +96,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className={`${inter.variable} ${orbitron.variable} ${eurostile.variable} font-sans`}>
+      <body className={`${eurostile.variable} font-sans`}>
         <Analytics />
         <SpeedInsights />
         <Navbar />

@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -8,6 +9,9 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+
+  const pathname = usePathname ? usePathname() : undefined;
+  const router = useRouter ? useRouter() : undefined;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,16 +39,25 @@ export default function Navbar() {
 
   const handleNavClick = (sectionId: string) => {
     setIsOpen(false);
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+    // If already on the about page, smooth-scroll to the section
+    if (typeof pathname === 'string' && pathname.startsWith('/about')) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const offset = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+      }
+      return;
+    }
+
+    // Otherwise navigate to the about page with a hash
+    if (router) {
+      router.push(`/about#${sectionId}`);
+    } else {
+      window.location.href = `/about#${sectionId}`;
     }
   };
 
@@ -60,7 +73,7 @@ export default function Navbar() {
           <div className="flex-shrink-0 relative group">
             <div className="absolute inset-0 bg-gradient-to-r from-[#DC143C]/20 to-transparent rounded-lg blur-xl group-hover:blur-2xl transition-all duration-500"></div>
             <Link href="/" className="relative block transition-transform duration-300 hover:scale-105">
-              <Image src="/images/ABYSS.svg" alt="ABYSS" width={45} height={45} className="drop-shadow-[0_0_8px_rgba(220,20,60,0.3)]" />
+              <Image src="/images/Signature.svg" alt="ABYSS" width={200} height={200} className="drop-shadow-[0_0_8px_rgba(220,20,60,0.3)]" />
             </Link>
           </div>
 
@@ -77,7 +90,7 @@ export default function Navbar() {
                   hover:after:scale-x-100 hover:after:origin-left
                   hover:translate-y-[-2px]"
               >
-                Games
+                Products
               </Link>
               {[
                 { id: 'about', label: 'About' },
