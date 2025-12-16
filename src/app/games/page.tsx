@@ -9,9 +9,7 @@ import Background from '@/components/background';
 import TechBackground from '@/components/TechBackground';
 import GameModal from '@/components/GameModal';
 
-export const metadata = {
-  title: 'Products | Abyss Studios',
-}
+
 
 const games = [
   {

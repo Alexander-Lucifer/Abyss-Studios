@@ -5,10 +5,6 @@ import Image from "next/image";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import TechBackground from "@/components/TechBackground";
-
-export const metadata = {
-  title: 'About | Abyss Studios',
-}
 import MediaFrame from "../../components/MediaFrame";
 
 // Toggle to show or hide "Read More" buttons — change here in code only.
