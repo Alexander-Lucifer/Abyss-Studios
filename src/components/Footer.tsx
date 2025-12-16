@@ -22,7 +22,7 @@ export default function Footer({ handleNavClick }: FooterProps) {
           <div className="space-y-4">
             <div className="relative inline-block">
               <div className="absolute inset-0 bg-gradient-to-r from-[#DC143C]/20 to-transparent rounded-lg blur-xl"></div>
-              <Image src="/images/Footer.png" alt="ABYSS STUDIOS" width={200} height={200} className="relative drop-shadow-[0_0_8px_rgba(220,20,60,0.3)]" />
+              <Image src="/images/Signature.svg" alt="ABYSS STUDIOS" width={200} height={200} className="relative drop-shadow-[0_0_8px_rgba(220,20,60,0.3)]" />
             </div>
             <p className="text-white/60 text-sm">
               Crafting immersive gaming experiences that push the boundaries of entertainment
