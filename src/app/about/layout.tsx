@@ -1,16 +1,16 @@
 import { Metadata, Viewport } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Product Library | Abyss Studios',
+  title: 'About Us | Abyss Studios',
   description: 'Explore our collection of immersive gaming experiences crafted by Abyss Studios.',
   openGraph: {
-    title: 'Product Library | Abyss Studios',
+    title: 'About Us | Abyss Studios',
     description: 'Explore our collection of immersive gaming experiences crafted by Abyss Studios.',
     images: ['/images/newLogo.svg'],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Product Library | Abyss Studios',
+    title: 'About Us | Abyss Studios',
     description: 'Explore our collection of immersive gaming experiences crafted by Abyss Studios.',
     images: ['/images/newLogo.svg'],
   },
