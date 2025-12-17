@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     siteName: 'Abyss Studios',
     images: [
       {
-        url: '/images/Signature.svg',
+        url: '/images/newLogo.svg',
         width: 1200,
         height: 630,
         alt: 'Abyss Studios - Game Development Studio',
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Abyss Studios | Indie Game Development Studio in India',
     description: 'Crafting immersive gaming experiences that push the boundaries of entertainment. Based in Delhi, India.',
-    images: ['/images/Signature.svg'],
+    images: ['/images/newLogo.svg'],
     creator: '@theabyssstudios',
   },
   viewport: 'width=device-width, initial-scale=1',

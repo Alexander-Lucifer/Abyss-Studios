@@ -10,7 +10,7 @@ export default function PrivacyPolicy() {
           <div className="flex items-center justify-between">
             <a href="/" className="relative inline-block">
               <div className="absolute inset-0 bg-gradient-to-r from-[#DC143C]/20 to-transparent rounded-lg blur-xl"></div>
-              <Image src="/images/Signature.svg" alt="ABYSS" width={100} height={75} className="relative drop-shadow-[0_0_8px_rgba(220,20,60,0.3)]" />
+              <Image src="/images/newLogo.svg" alt="ABYSS" width={100} height={75} className="relative drop-shadow-[0_0_8px_rgba(220,20,60,0.3)]" />
             </a>
           </div>
         </div>

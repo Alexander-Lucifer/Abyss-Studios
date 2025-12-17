@@ -76,7 +76,7 @@ export default function Navbar() {
               {/* FIXED: Added 'unoptimized' to fix production visibility. 
                   Kept original classes exactly as they were. */}
               <Image 
-                src="/images/Signature.svg" 
+                src="/images/newLogo.svg" 
                 alt="ABYSS" 
                 width={200} 
                 height={200} 
