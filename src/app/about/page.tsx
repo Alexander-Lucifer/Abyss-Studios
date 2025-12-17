@@ -244,7 +244,7 @@ export default function AboutPage() {
               </blockquote>
             </div>
 
-            <div className="flex justify-center">
+            {/*<div className="flex justify-center">
                 <div className="w-full max-w-3xl rounded-xl overflow-hidden p-6">
                   <div
                     className="rounded-md overflow-hidden"
@@ -256,7 +256,7 @@ export default function AboutPage() {
                     <Image src="/images/pp.png" alt="Founder" width={1200} height={1600} className="object-cover w-full h-[720px] md:h-[920px]" />
                   </div>
                 </div>
-            </div>
+            </div> */}
           </div>
         </section>
 

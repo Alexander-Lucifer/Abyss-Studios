@@ -94,7 +94,7 @@ export default function Home() {
               <div className="relative aspect-square rounded-xl overflow-hidden border border-[#DC143C]/20 group-hover:border-[#DC143C]/40 transition-all duration-500">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
                 <Image 
-                  src="/images/home.png" 
+                  src="/images/ABYSS.svg" 
                   alt="Abyss Studios" 
                   layout="fill" 
                   objectFit="contain" 
