@@ -8,6 +8,19 @@ export async function POST(request: Request) {
     // Log form data (excluding sensitive information)
     console.log('Received application for position:', formData.get('position'));
     
+    // Check if SMTP is properly configured
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD || 
+        process.env.SMTP_HOST === 'SMTP_HOST' || process.env.SMTP_USER === 'SMTP_USER') {
+      console.log('SMTP not configured, returning error to trigger fallback');
+      return NextResponse.json(
+        { 
+          message: 'SMTP not configured - please use mailto fallback',
+          fallback: true
+        },
+        { status: 500 }
+      );
+    }
+    
     // Create transporter
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
@@ -24,13 +37,13 @@ export async function POST(request: Request) {
     console.log('SMTP connection verified successfully');
 
     // Prepare email content
-    const position = formData.get('position');
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const phone = formData.get('phone');
-    const portfolio = formData.get('portfolio');
-    const experience = formData.get('experience');
-    const message = formData.get('message');
+    const position = formData.get('position') as string;
+    const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
+    const phone = formData.get('phone') as string;
+    const portfolio = formData.get('portfolio') as string;
+    const experience = formData.get('experience') as string;
+    const message = formData.get('message') as string;
     const resume = formData.get('resume') as File;
 
     if (!resume) {
@@ -41,9 +54,10 @@ export async function POST(request: Request) {
     const resumeBuffer = Buffer.from(await resume.arrayBuffer());
     console.log('Resume processed successfully');
 
-    // Send email
+    // Send email from user's email address
     const info = await transporter.sendMail({
-      from: process.env.SMTP_USER,
+      from: `"${name}" <${email}>`,
+      replyTo: email,
       to: process.env.CONTACT_EMAIL,
       subject: `Job Application: ${position} - ${name}`,
       text: `
@@ -66,7 +80,9 @@ ${message}
         <p><strong>Portfolio:</strong> ${portfolio}</p>
         <p><strong>Experience:</strong> ${experience}</p>
         <h3>Cover Letter:</h3>
-        <p>${message}</p>
+        <p>${(message || '').replace(/\n/g, '<br>')}</p>
+        <hr>
+        <p><small>This application was sent from the Abyss Studios website career form.</small></p>
       `,
       attachments: [
         {
@@ -76,10 +92,10 @@ ${message}
       ],
     });
 
-    console.log('Email sent successfully:', info.messageId);
+    console.log('Email sent successfully:', (info as any).messageId);
     return NextResponse.json({ 
       message: 'Application submitted successfully',
-      messageId: info.messageId
+      messageId: (info as any).messageId
     });
   } catch (error) {
     console.error('Error sending application:', error);

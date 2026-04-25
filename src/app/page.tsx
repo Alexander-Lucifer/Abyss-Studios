@@ -1,236 +1,135 @@
 'use client';
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import Navbar from '@/components/Navbar';
-import Link from 'next/link';
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import Background from "@/components/background";
-import TechBackground from '@/components/TechBackground';
-import Footer from '@/components/Footer';
+import Link from "next/link";
+import Footer from "@/components/Footer";
 
 export default function Home() {
-  const handleNavClick = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
+  const [showIntro, setShowIntro] = useState(true);
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
+  useEffect(() => {
+    const timer = window.setTimeout(() => setShowIntro(false), 2200);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   return (
-    <main className="relative min-h-screen">
-      <TechBackground />
-      <Navbar />
-      
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4">
-        <div className="text-center z-10">
-          <h1 className="font-eurostile text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-[#DC143C] to-[#B01030] bg-clip-text text-transparent tracking-wider">
-            ABYSS STUDIOS
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-white/80 max-w-2xl mx-auto">
-            Crafting immersive gaming experiences that push the boundaries of entertainment
+    <main className="site-shell">
+      <div className={`opening-sequence ${showIntro ? "opening-sequence-visible" : "opening-sequence-hidden"}`}>
+        <div className="opening-film-grain" />
+        <p className="opening-label">Booting cinematic layer...</p>
+        <h1 className="opening-title">ABYSS STUDIOS</h1>
+        <p className="opening-subtitle">Press start to descend</p>
+      </div>
+
+      <div
+        className={`transition-opacity duration-500 ${showIntro ? "opacity-0 pointer-events-none select-none" : "opacity-100"}`}
+        aria-hidden={showIntro}
+      >
+      <section className="cinematic-hero">
+        <div className="hero-overlay"></div>
+        <div className="hero-noise"></div>
+        <div className="hero-orb hero-orb-left" />
+        <div className="hero-orb hero-orb-right" />
+        <div className="hero-rings" />
+        <div className="content-wrap relative z-10 text-center">
+          <span className="heading-kicker">Descend Into Depths</span>
+          <h1 className="section-title text-5xl md:text-7xl">Abyss Studios</h1>
+          <p className="section-subtitle mx-auto max-w-3xl">
+            We build atmospheric games with cinematic worldbuilding, interactive storytelling,
+            and a dark crimson visual signature.
           </p>
-          <button className="gaming-button">
-          <Link href="#games" className="gaming-button">
-            Explore Our Games
-          </Link>
-          </button>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <Link href="/games" className="gaming-button">
+              Explore Games
+            </Link>
+            <Link href="/about" className="tag !px-5 !py-3 !text-sm">
+              Studio Story
+            </Link>
+          </div>
+          <div className="hero-scroll-cue">Scroll to begin your run</div>
         </div>
       </section>
-      {/* About Section */}
-      <section id="about" className="relative py-32 px-4 overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-[#1a0000]/50 to-black/50"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#DC143C]/10 via-transparent to-transparent opacity-50"></div>
-        
-        <div className="max-w-7xl mx-auto relative">
-          <div className="text-center mb-16">
-            <h2 className="section-title">About Us</h2>
-            <p className="text-xl text-white/80 max-w-3xl mx-auto mt-6">
-              "The More you Stare into The Abyss the more it Stares Back"
+
+      <section className="section-shell">
+        <div className="content-wrap mb-8">
+          <div className="fun-marquee">
+            <div className="fun-marquee-track">
+              <span>Worldbuilding</span>
+              <span>Boss Fights</span>
+              <span>Emotional Story Arcs</span>
+              <span>Experimental Mechanics</span>
+              <span>Stylized Horror</span>
+              <span>Worldbuilding</span>
+              <span>Boss Fights</span>
+              <span>Emotional Story Arcs</span>
+            </div>
+          </div>
+        </div>
+        <div className="content-wrap grid gap-6 md:grid-cols-3">
+          {[
+            { title: "Narrative Design", text: "Layered stories inspired by myth, horror, and speculative fiction." },
+            { title: "Cinematic Craft", text: "Every environment is staged like a scene, with intentional rhythm and mood." },
+            { title: "Playable Emotion", text: "Gameplay systems that translate tension, wonder, and dread into interaction." },
+          ].map((item) => (
+            <article key={item.title} className="cinematic-card fun-card">
+              <span className="card-spark" />
+              <h3 className="text-xl font-bold text-white">{item.title}</h3>
+              <p className="mt-3 text-white/75 leading-relaxed">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-shell">
+        <div className="content-wrap">
+          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <span className="heading-kicker">Featured Projects</span>
+              <h2 className="section-title text-4xl md:text-5xl">Current Showcase</h2>
+            </div>
+            <Link href="/games" className="tag">View full library</Link>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              { name: "Tiles & Towers", image: "/images/Tiles.png", brief: "Roll your fate in a strategic puzzle duel." },
+              { name: "Mansion of Chaos", image: "/images/moc.png", brief: "A first-person descent into uncanny architecture." },
+              { name: "Finite Samsara", image: "/images/Samsara.png", brief: "Break the loop or become part of it forever." },
+            ].map((game) => (
+              <article key={game.name} className="cinematic-card fun-card p-0">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
+                  <Image src={game.image} alt={game.name} fill className="object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent" />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white">{game.name}</h3>
+                  <p className="mt-2 text-white/75">{game.brief}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell pb-28">
+        <div className="content-wrap">
+          <div className="cinematic-card text-center py-12">
+            <span className="heading-kicker">Join The Abyss</span>
+            <h2 className="section-title text-4xl md:text-5xl">Create Strange Worlds With Us</h2>
+            <p className="section-subtitle mx-auto max-w-2xl">
+              Collaborate with us, pitch your ideas, or apply to the studio.
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
-              <div className="card group">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#DC143C]/20 to-transparent rounded-xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-                <div className="relative bg-black/40 backdrop-blur-md rounded-xl p-8 border border-[#DC143C]/20 group-hover:border-[#DC143C]/40 transition-all duration-500">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#DC143C] to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                  <h3 className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#DC143C] to-[#B01030] bg-clip-text text-transparent">
-                    Our Story
-                  </h3>
-                  <p className="text-white/80 mb-6 leading-relaxed">
-                    Abyss Studios, founded in 2022 by Mr. Suryanshu Mittal as an indie game studio (then known as Underworld Indie Games), began its full operations in 2024. Our journey started with a simple yet powerful vision: to create immersive gaming experiences that push the boundaries of entertainment.
-                  </p>
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent to-[#DC143C] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right"></div>
-                </div>
-              </div>
-
-              <div className="card group">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#DC143C]/20 to-transparent rounded-xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-                <div className="relative bg-black/40 backdrop-blur-md rounded-xl p-8 border border-[#DC143C]/20 group-hover:border-[#DC143C]/40 transition-all duration-500">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#DC143C] to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                  <h3 className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#DC143C] to-[#B01030] bg-clip-text text-transparent">
-                    Our Mission
-                  </h3>
-                  <p className="text-white/80 mb-6 leading-relaxed">
-                    At Abyss Studios, we focus on bringing stories to life with an interactive and artistic touch. We employ cutting-edge technology like Unreal Engine along with industry-standard tools such as Autodesk Maya and ZBrush to transform the creative visions of talented writers into immersive gaming experiences.
-                  </p>
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent to-[#DC143C] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right"></div>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#DC143C]/20 to-transparent rounded-xl blur-xl"></div>
-              <div className="relative aspect-square rounded-xl overflow-hidden border border-[#DC143C]/20 group-hover:border-[#DC143C]/40 transition-all duration-500">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-                <Image 
-                  src="/images/ABYSS.svg" 
-                  alt="Abyss Studios" 
-                  layout="fill" 
-                  objectFit="contain" 
-                  className="transform group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#DC143C]/0 via-transparent to-[#DC143C]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              </div>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Link href="/contact" className="gaming-button">Contact Us</Link>
+              <Link href="/careers" className="tag !px-5 !py-3 !text-sm">Careers</Link>
             </div>
           </div>
         </div>
       </section>
-      {/* Featured Games Section */}
-      <section id="games" className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="section-title">Featured Games</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {name: "Tiles & Towers", image: "/images/Tiles.png", breif: "Roll Your Fate", genre:"Puzzle, Board, Strategy, Windows, Mac, Web", alt:"https://abyss-studios.itch.io/tiles-towers"},
-              {name: "Mansion of Chaos", image: "/images/moc.png", breif: "An Immersive First-Person Explorer", genre:"Exploration,Sombre,Jam,Windows", alt:"https://the-abyss-games.itch.io/mansion-of-chaos"},
-              {name:"Finite Samsara", image:"/images/Samsara.png", breif:"The Loop Remains Untouched", genre:"First-Person,Thriller,Jam,Windows, Puzzle", alt:"https://abyss-studios.itch.io/finite-samsara"},
-            ].map((game, index) => (
-              <div key={index} className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#DC143C]/20 to-transparent rounded-xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-                <div className="relative bg-black/40 backdrop-blur-md rounded-xl overflow-hidden border border-[#DC143C]/20 group-hover:border-[#DC143C]/40 transition-all duration-500">
-                  <Link href={game.alt} className="block">
-                    <div className="relative aspect-square overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-                      <Image 
-                        src={game.image} 
-                        alt={game.name} 
-                        layout="fill" 
-                        objectFit="cover" 
-                        className="transform group-hover:scale-110 transition-transform duration-700"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#DC143C]/0 via-transparent to-[#DC143C]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    </div>
-                    <div className="p-6 relative">
-                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#DC143C] to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                      <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-[#DC143C] to-[#B01030] bg-clip-text text-transparent group-hover:from-[#B01030] group-hover:to-[#DC143C] transition-all duration-500">
-                        {game.name}
-                      </h3>
-                      <p className="text-white/70 mb-3 group-hover:text-white/90 transition-colors duration-300">
-                        {game.breif}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {game.genre.split(',').map((genre, i) => (
-                          <span 
-                            key={i}
-                            className="px-3 py-1 text-sm bg-[#DC143C]/10 text-[#DC143C] rounded-full border border-[#DC143C]/20 group-hover:bg-[#DC143C]/20 group-hover:border-[#DC143C]/40 transition-all duration-300"
-                          >
-                            {genre.trim()}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent to-[#DC143C] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right"></div>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-12 text-center">
-            <Link 
-              href="/games" 
-              className="inline-block px-8 py-3 bg-gradient-to-r from-[#DC143C] to-[#B01030] hover:from-[#B01030] hover:to-[#8B0000] text-white rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-[#DC143C]/20"
-            >
-              See All Games
-            </Link>
-          </div>
-        </div>
-      </section>
 
-      
-
-      {/* Team Section */}
-      <section id="team" className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="section-title">Our Team</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { name: "Suryanshu Mittal", image: "/images/surya.jpg", role: "Founder and Game Director" },
-              { name: "Daksh Kaushik", image: "/images/Daksh.jpg", role: "Director of Animation and 3D" },
-            ].map((member, index) => (
-              <div key={index} className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#DC143C]/20 to-transparent rounded-xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-                <div className="relative bg-black/40 backdrop-blur-md rounded-xl overflow-hidden border border-[#DC143C]/20 group-hover:border-[#DC143C]/40 transition-all duration-500">
-                  <div className="relative aspect-square overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-                    <Image 
-                      src={member.image} 
-                      alt={member.name} 
-                      layout="fill" 
-                      objectFit="cover" 
-                      className="transform group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#DC143C]/0 via-transparent to-[#DC143C]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  </div>
-                  <div className="p-6 relative text-center">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#DC143C] to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                    <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-[#DC143C] to-[#B01030] bg-clip-text text-transparent group-hover:from-[#B01030] group-hover:to-[#DC143C] transition-all duration-500">
-                      {member.name}
-                    </h3>
-                    <div className="flex justify-center">
-                      <span className="px-4 py-1 text-sm bg-[#DC143C]/10 text-[#DC143C] rounded-full border border-[#DC143C]/20 group-hover:bg-[#DC143C]/20 group-hover:border-[#DC143C]/40 transition-all duration-300">
-                        {member.role}
-                      </span>
-                    </div>
-                    <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent to-[#DC143C] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right"></div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact CTA Section */}
-      <section id="contact" className="py-32 px-4 bg-gradient-to-b from-black/50 to-[#1a0000]/50">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="section-title mx-auto">Ready to Connect?</h2>
-          <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto">
-            Whether you're interested in our games, want to collaborate, or just have a question,
-            we'd love to hear from you. Let's create something amazing together.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <Link href="/contact" className="gaming-button text-lg px-12 py-4">
-              Get in Touch
-            </Link>
-            <Link href="/careers" className="gaming-button text-lg px-12 py-4 bg-gradient-to-r from-[#B01030] to-[#8B0000] hover:from-[#8B0000] hover:to-[#600000]">
-              Join Our Team
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <Footer handleNavClick={handleNavClick} />
+      <Footer />
+      </div>
     </main>
   );
 }

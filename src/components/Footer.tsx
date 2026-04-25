@@ -2,113 +2,66 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 interface FooterProps {
-  handleNavClick?: (sectionId: string) => void;
+  handleNavClick?: (_sectionId: string) => void;
 }
 
-export default function Footer({ handleNavClick }: FooterProps) {
-  const router = useRouter();
+export default function Footer({ handleNavClick: _handleNavClick }: FooterProps) {
   return (
-    <footer className="relative py-12 px-4 overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-[#DC143C]/5 to-black/0"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#DC143C]/10 via-transparent to-transparent opacity-50"></div>
-      
-      <div className="max-w-7xl mx-auto relative">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          {/* Company Info */}
-          <div className="space-y-4">
-            <div className="relative inline-block">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#DC143C]/20 to-transparent rounded-lg blur-xl"></div>
-              <Image src="/images/newLogo.svg" alt="ABYSS STUDIOS" width={200} height={200} className="relative drop-shadow-[0_0_8px_rgba(220,20,60,0.3)]" />
+    <footer className="section-shell pb-10">
+      <div className="content-wrap">
+        <div className="rounded-2xl border border-[#dc143c]/25 bg-black/35 p-8 backdrop-blur-md">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div>
+              <Image src="/images/newLogo.svg" alt="ABYSS STUDIOS" width={170} height={60} unoptimized={true} />
+              <p className="mt-4 text-sm text-white/70">
+                Fiction-first game studio crafting atmospheric worlds with a dark crimson signature.
+              </p>
             </div>
-            <p className="text-white/60 text-sm">
-              Crafting immersive gaming experiences that push the boundaries of entertainment
+
+            <div>
+              <h3 className="text-sm uppercase tracking-[0.16em] text-white/70">Explore</h3>
+              <div className="mt-4 flex flex-col gap-2">
+                {[
+                  { href: "/", label: "Home" },
+                  { href: "/games", label: "Games" },
+                  { href: "/about", label: "About" },
+                  { href: "/careers", label: "Careers" },
+                  { href: "/contact", label: "Contact" },
+                ].map((item) => (
+                  <Link key={item.href} href={item.href} className="text-white/80 hover:text-[#ff7f9a]">
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm uppercase tracking-[0.16em] text-white/70">Social</h3>
+              <div className="mt-4 flex gap-4">
+                {[
+                  { name: "X", icon: "/images/x.svg", link: "https://x.com/theabyssstudios" },
+                  { name: "Instagram", icon: "/images/instagram.svg", link: "https://www.instagram.com/abyssstudios_._" },
+                  { name: "LinkedIn", icon: "/images/linkedin.svg", link: "https://www.linkedin.com/company/the-abyss-studios" },
+                ].map((social) => (
+                  <a key={social.name} href={social.link} target="_blank" rel="noreferrer" className="tag">
+                    <Image src={social.icon} alt={social.name} width={16} height={16} />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-col items-start justify-between gap-4 border-t border-[#dc143c]/20 pt-6 text-sm text-white/60 md:flex-row md:items-center">
+            <p>
+              © 2026 Abyss Studios. All rights reserved.
             </p>
-          </div>
-
-          {/* Quick Links */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-bold bg-gradient-to-r from-[#DC143C] to-[#B01030] bg-clip-text text-transparent">
-              Quick Links
-            </h3>
-            <div className="flex flex-col space-y-2">
-              {['Games', 'About', 'Team', 'Contact'].map((item) => {
-                if (item === 'Games') {
-                  return (
-                    <Link
-                      key={item}
-                      href="/games"
-                      className="relative text-white/60 hover:text-[#DC143C] transition-colors duration-300 text-left"
-                    >
-                      {item}
-                    </Link>
-                  );
-                }
-
-                const handleClick = () => {
-                  const id = item.toLowerCase();
-                  if (handleNavClick) return handleNavClick(id);
-                  router.push(`/about#${id}`);
-                };
-
-                return (
-                  <button
-                    key={item}
-                    onClick={handleClick}
-                    className="relative text-white/60 hover:text-[#DC143C] transition-colors duration-300 text-left"
-                  >
-                    {item}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Social Links */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-bold bg-gradient-to-r from-[#DC143C] to-[#B01030] bg-clip-text text-transparent">
-              Connect With Us
-            </h3>
-            <div className="flex space-x-4">
-              {[
-                { name: 'Twitter', icon: "/images/x.svg" , link: "https://x.com/theabyssstudios"},
-                { name: 'Instagram', icon: "/images/instagram.svg" , link: "https://www.instagram.com/abyssstudios_._"},
-                { name: 'LinkedIn', icon: "/images/linkedin.svg" , link: "https://www.linkedin.com/company/the-abyss-studios"}
-              ].map((social) => (
-                <a
-                  key={social.name}
-                  href={social.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-[#DC143C]/10 text-[#DC143C] hover:bg-[#DC143C]/20 transition-all duration-300 border border-[#DC143C]/20 hover:border-[#DC143C]/40"
-                >
-                  <Image
-                    src={social.icon}
-                    alt={social.name}
-                    width={20}
-                    height={20}
-                    className="opacity-80 hover:opacity-100 transition-opacity duration-300"
-                  />
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Copyright */}
-        <div className="pt-8 border-t border-[#DC143C]/20">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-white/60 text-sm">
-              © 2025 Abyss Studios. All rights reserved.
-            </p>
-            <div className="flex space-x-6">
-              <a href="/privacy-policy" className="text-white/60 hover:text-[#DC143C] transition-colors duration-300 text-sm">
+            <div className="flex gap-5">
+              <a href="/privacy-policy" className="hover:text-[#ff7f9a]">
                 Privacy Policy
               </a>
-              <a href="/terms-of-service" className="text-white/60 hover:text-[#DC143C] transition-colors duration-300 text-sm">
+              <a href="/terms-of-service" className="hover:text-[#ff7f9a]">
                 Terms of Service
               </a>
             </div>

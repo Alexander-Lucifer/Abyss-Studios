@@ -1,203 +1,98 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
-
-  const pathname = usePathname ? usePathname() : undefined;
-  const router = useRouter ? useRouter() : undefined;
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-      
-      // Update active section based on scroll position
-      const sections = ['about', 'team', 'contact'];
-      const currentSection = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      
-      if (currentSection) {
-        setActiveSection(currentSection);
-      }
+      setScrolled(window.scrollY > 12);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (sectionId: string) => {
-    setIsOpen(false);
-
-    // If already on the about page, smooth-scroll to the section
-    if (typeof pathname === 'string' && pathname.startsWith('/about')) {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        const offset = 80;
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-      }
-      return;
-    }
-
-    // Otherwise navigate to the about page with a hash
-    if (router) {
-      router.push(`/about#${sectionId}`);
-    } else {
-      window.location.href = `/about#${sectionId}`;
-    }
-  };
-
   return (
     <nav className={`fixed w-full z-50 transition-all duration-500 ${
       scrolled
-        ? 'bg-black/30 backdrop-blur-xl border-b border-[#DC143C]/20 shadow-lg shadow-[#DC143C]/5'
-        : 'bg-black/10 backdrop-blur-sm'
+        ? 'bg-black/55 backdrop-blur-xl border-b border-[#dc143c]/25'
+        : 'bg-black/15 backdrop-blur-sm'
     }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="content-wrap">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <div className="flex-shrink-0 relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#DC143C]/20 to-transparent rounded-lg blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-            <Link href="/" className="relative block transition-transform duration-300 hover:scale-105">
-              {/* FIXED: Added 'unoptimized' to fix production visibility. 
-                  Kept original classes exactly as they were. */}
-              <Image 
-                src="/images/newLogo.svg" 
-                alt="ABYSS" 
-                width={200} 
-                height={200} 
-                unoptimized={true}
-                className="drop-shadow-[0_0_8px_rgba(220,20,60,0.3)]" 
-              />
+          <Link href="/" className="relative block transition-transform duration-300 hover:scale-[1.02]">
+            <Image
+              src="/images/newLogo.svg"
+              alt="ABYSS"
+              width={170}
+              height={64}
+              unoptimized={true}
+              className="drop-shadow-[0_0_10px_rgba(220,20,60,0.35)]"
+            />
+          </Link>
+
+          <div className="hidden md:flex items-center gap-7">
+            {[
+              { href: "/", label: "Home" },
+              { href: "/games", label: "Games" },
+              { href: "/about", label: "About", dropdown: [
+                { href: "/about/life", label: "Studio Life" },
+                { href: "/about/team", label: "Our Team" }
+              ]},
+              { href: "/careers", label: "Careers" },
+              { href: "/contact", label: "Contact" },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-sm uppercase tracking-[0.14em] text-white/80 hover:text-[#ff6b8a] transition-colors"
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Link href="/careers/apply" className="gaming-button !px-5 !py-2.5 !text-xs">
+              Apply
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-center space-x-8">
-              <Link
-                href="/games"
-                className="relative px-4 py-2 text-white/80 hover:text-[#DC143C] transition-all duration-300
-                  after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5
-                  after:bg-gradient-to-r after:from-[#DC143C] after:to-[#B01030]
-                  after:transform after:scale-x-0 after:origin-right
-                  after:transition-transform after:duration-300
-                  hover:after:scale-x-100 hover:after:origin-left
-                  hover:translate-y-[-2px]"
-              >
-                Products
-              </Link>
-              {[
-                { id: 'about', label: 'About' },
-                { id: 'team', label: 'Team' },
-                { id: 'contact', label: 'Contact' }
-              ].map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item.id)}
-                  className={`relative px-4 py-2 text-white/80 hover:text-[#DC143C] transition-all duration-300
-                    after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5
-                    after:bg-gradient-to-r after:from-[#DC143C] after:to-[#B01030]
-                    after:transform after:scale-x-0 after:origin-right
-                    after:transition-transform after:duration-300
-                    hover:after:scale-x-100 hover:after:origin-left
-                    hover:translate-y-[-2px]
-                    ${activeSection === item.id ? 'text-[#DC143C] after:scale-x-100' : ''}`}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="relative inline-flex items-center justify-center p-2 rounded-md text-white hover:text-[#DC143C] focus:outline-none transition-colors duration-300
-                after:absolute after:inset-0 after:bg-[#DC143C]/10 after:rounded-md after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-300"
-            >
-              <span className="sr-only">Open main menu</span>
-              {/* Hamburger icon */}
-              <svg
-                className={`${isOpen ? 'hidden' : 'block'} h-6 w-6 transition-transform duration-300`}
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-              {/* Close icon */}
-              <svg
-                className={`${isOpen ? 'block' : 'hidden'} h-6 w-6 transition-transform duration-300`}
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile menu */}
-      <div className={`md:hidden transition-all duration-300 ease-in-out ${
-        isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-      } overflow-hidden bg-black/40 backdrop-blur-xl border-t border-[#DC143C]/20`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <Link
-            href="/games"
-            className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white hover:text-[#DC143C] hover:bg-[#DC143C]/10 transition-all duration-300"
-            onClick={() => setIsOpen(false)}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden text-white p-2 border border-[#dc143c]/30 rounded-lg"
+            aria-label="Toggle menu"
           >
-            Games
-          </Link>
-          {[
-            { id: 'about', label: 'About' },
-            { id: 'team', label: 'Team' },
-            { id: 'contact', label: 'Contact' }
-          ].map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleNavClick(item.id)}
-              className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-all duration-300
-                ${activeSection === item.id 
-                  ? 'text-[#DC143C] bg-[#DC143C]/10' 
-                  : 'text-white hover:text-[#DC143C] hover:bg-[#DC143C]/10'
-                }`}
-            >
-              {item.label}
-            </button>
-          ))}
+            {isOpen ? "Close" : "Menu"}
+          </button>
         </div>
       </div>
+
+      {isOpen && (
+        <div className="md:hidden border-t border-[#dc143c]/20 bg-black/70 backdrop-blur-xl">
+          <div className="content-wrap py-4 flex flex-col gap-2">
+            {[
+              { href: "/", label: "Home" },
+              { href: "/games", label: "Games" },
+              { href: "/about", label: "About" },
+              { href: "/careers", label: "Careers" },
+              { href: "/contact", label: "Contact" },
+              { href: "/careers/apply", label: "Apply" },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className="rounded-lg px-3 py-2 text-white/85 hover:bg-[#dc143c]/15"
+            >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

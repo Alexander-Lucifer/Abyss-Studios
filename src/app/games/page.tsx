@@ -1,397 +1,139 @@
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import Background from '@/components/background';
-import TechBackground from '@/components/TechBackground';
-import GameModal from '@/components/GameModal';
-
-
+import { useMemo, useState } from "react";
+import Image from "next/image";
+import Footer from "@/components/Footer";
+import GameModal from "@/components/GameModal";
 
 const games = [
   {
-    name: "God Of War Lite",
-    image: "/images/gow.png",
-    brief: "A short 2D demake of GOW",
-    genre: "Platformer,RPG,Windows",
-    alt: "https://the-abyss-games.itch.io/god-of-war-lite",
-    version: "1.0.0",
-    systemRequirements: {
-      minimum: [
-        "OS: Windows 7 or later",
-        "Processor: Intel Core i3 or equivalent",
-        "Memory: 4 GB RAM",
-        "Graphics: DirectX 11 compatible GPU",
-        "Storage: 500 MB available space"
-      ],
-      recommended: [
-        "OS: Windows 10",
-        "Processor: Intel Core i5 or equivalent",
-        "Memory: 8 GB RAM",
-        "Graphics: DirectX 12 compatible GPU",
-        "Storage: 1 GB available space"
-      ]
-    },
-    downloadLinks: {
-      itch: "https://the-abyss-games.itch.io/god-of-war-lite"
-    },
-    credits: {
-      developers: ["Suryanshu Mittal"],
-      artists: ["Suryanshu Mittal"],
-      designers: ["Suryanshu Mittal"],
-      writers: ["Suryanshu Mittal"],
-      specialThanks: ["God of War Team", "Sony Interactive Entertainment, Thomas Brush"]
-    }
+    name: "Tiles & Towers",
+    image: "/images/Tiles.png",
+    brief: "Roll your fate in a strategic board-inspired roguelite.",
+    genre: "Puzzle,Strategy,Windows,Mac,Web,Jam",
+    alt: "https://abyss-studios.itch.io/tiles-towers",
   },
   {
     name: "Mansion of Chaos",
     image: "/images/moc.png",
-    brief: "An Immersive First-Person Explorer",
-    genre: "Exploration,Sombre,Jam,Windows",
+    brief: "Explore a haunted architecture where memory mutates.",
+    genre: "Exploration,Thriller,Windows,Jam",
     alt: "https://the-abyss-games.itch.io/mansion-of-chaos",
-    version: "1.0.0",
-    systemRequirements: {
-      minimum: [
-        "OS: Windows 10",
-        "Processor: Intel Core i3 or equivalent",
-        "Memory: 4 GB RAM",
-        "Graphics: DirectX 11 compatible GPU",
-        "Storage: 1 GB available space"
-      ],
-      recommended: [
-        "OS: Windows 10",
-        "Processor: Intel Core i5 or equivalent",
-        "Memory: 8 GB RAM",
-        "Graphics: DirectX 12 compatible GPU",
-        "Storage: 2 GB available space"
-      ]
-    },
-    downloadLinks: {
-      itch: "https://the-abyss-games.itch.io/mansion-of-chaos"
-    },
-    credits: {
-      developers: ["Suryanshu Mittal", "Daksh Kaushik"],
-      artists: ["Daksh Kaushik"],
-      designers: ["Suryanshu Mittal"],
-      writers: ["What is a writer?"],
-      specialThanks: ["Brackeys Game Jam Community"]
-    }
   },
   {
-    name: "Pesky Labrinths",
-    image: "/images/pl.png",
-    brief: "A Short Dungeon Explorer Demo",
-    genre: "Arcade,Jam,Windows",
-    alt: "https://the-abyss-games.itch.io/the-pesky-labyrinths",
-    version: "1.0.0",
-    systemRequirements: {
-      minimum: [
-        "OS: Windows 7 or later",
-        "Processor: Intel Core i3 or equivalent",
-        "Memory: 2 GB RAM",
-        "Graphics: DirectX 11 compatible GPU",
-        "Storage: 500 MB available space"
-      ],
-      recommended: [
-        "OS: Windows 10",
-        "Processor: Intel Core i5 or equivalent",
-        "Memory: 4 GB RAM",
-        "Graphics: DirectX 12 compatible GPU",
-        "Storage: 1 GB available space"
-      ]
-    },
-    downloadLinks: {
-      itch: "https://the-abyss-games.itch.io/the-pesky-labyrinths"
-    },
-    credits: {
-      developers: ["Suryanshu Mittal"],
-      artists: ["Suryanshu Mittal"],
-      designers: ["Suryanshu Mittal"],
-      writers: ["Suryanshu Mittal"],
-      specialThanks: ["Brackeys Game Jam Community"]
-    }
+    name: "Finite Samsara",
+    image: "/images/Samsara.png",
+    brief: "Break a cursed loop through puzzle-driven investigation.",
+    genre: "First-Person,Puzzle,Windows,Jam",
+    alt: "https://abyss-studios.itch.io/finite-samsara",
   },
   {
-    name: "Seek a Little",
+    name: "God Of War Lite",
+    image: "/images/gow.png",
+    brief: "A compact 2D demake tribute with arcade pacing.",
+    genre: "Platformer,RPG,Windows",
+    alt: "https://the-abyss-games.itch.io/god-of-war-lite",
+  },
+  {
+    name: "Seek A Little",
     image: "/images/sal.png",
-    brief: "Survive the Onslaught...and never blink!",
-    genre: "Exploration,Thriller,Jam,Windows",
+    brief: "A tense short-form survival thriller built for jam cadence.",
+    genre: "Thriller,Exploration,Windows,Jam",
     alt: "https://the-abyss-games.itch.io/seek-a-little",
-    version: "1.0.0",
-    systemRequirements: {
-      minimum: [
-        "OS: Windows 7 or later",
-        "Processor: Intel Core i3 or equivalent",
-        "Memory: 4 GB RAM",
-        "Graphics: DirectX 11 compatible GPU",
-        "Storage: 1 GB available space"
-      ],
-      recommended: [
-        "OS: Windows 10",
-        "Processor: Intel Core i5 or equivalent",
-        "Memory: 8 GB RAM",
-        "Graphics: DirectX 12 compatible GPU",
-        "Storage: 2 GB available space"
-      ]
-    },
-    downloadLinks: {
-      itch: "https://the-abyss-games.itch.io/seek-a-little"
-    },
-    credits: {
-      developers: ["Suryanshu Mittal"],
-      artists: ["Suryanshu Mittal"],
-      designers: ["Suryanshu Mittal", "Daksh Kaushik"],
-      writers: ["Suryanshu Mittal"],
-      specialThanks: ["Daksh Kaushik, Brackeys Game Jam Community"]
-    }
   },
   {
     name: "Under Beast",
     image: "/images/ub.png",
-    brief: "Explore a Dark world overrun by...Influencers?",
+    brief: "A dark satire platformer in a collapsing media world.",
     genre: "Platformer,RPG,Windows",
     alt: "https://the-abyss-games.itch.io/under-beast",
-    version: "1.0.0",
-    systemRequirements: {
-      minimum: [
-        "OS: Windows 7 or later",
-        "Processor: Intel Core i3 or equivalent",
-        "Memory: 4 GB RAM",
-        "Graphics: DirectX 11 compatible GPU",
-        "Storage: 1 GB available space"
-      ],
-      recommended: [
-        "OS: Windows 10",
-        "Processor: Intel Core i5 or equivalent",
-        "Memory: 8 GB RAM",
-        "Graphics: DirectX 12 compatible GPU",
-        "Storage: 2 GB available space"
-      ]
-    },
-    downloadLinks: {
-      itch: "https://the-abyss-games.itch.io/under-beast"
-    },
-    credits: {
-      developers: ["Suryanshu Mittal"],
-      artists: ["Suryanshu Mittal"],
-      designers: ["Suryanshu Mittal"],
-      writers: ["Suryanshu Mittal"],
-      specialThanks: ["Thomas Brush, X (Twitter) community"]
-    }
-  },
-  {
-    name: "Rusted Hearts",
-    image: "/images/RustedHearts.png",
-    brief: "",
-    genre: "Coming Soon (On-Hold),Windows,Puzzle Platformer",
-    alt: "https://abyssstudios.site/"
-  },
-  {
-    name: "Tiles & Towers Demo",
-    image: "/images/Tiles.png",
-    brief: "Roll your Fate or Suffer",
-    genre: "Board, Strategy,Jam,RNG,Windows,Mac,Web",
-    alt: "https://abyss-studios.itch.io/tiles-towers",
-    version: "1.0.0",
-    systemRequirements: {
-      minimum: [
-        "OS: Windows 7 or later or Mac OS X 10.9+",
-        "Processor: Intel Core i3 or equivalent or Apple Silicon",
-        "Memory: 2 GB RAM",
-        "Graphics: DirectX 11 compatible GPU",
-        "Storage: 50 MB available space"
-      ],
-      recommended: [
-        "OS: Windows 10 or later or Mac OS X 10.14+",
-        "Processor: Intel Core i5 or equivalent or Apple Silicon",
-        "Memory: 2 GB RAM",
-        "Graphics: Internal",
-        "Storage: 100 MB available space"
-      ]
-    },
-    downloadLinks: {
-      itch: "https://abyss-studios.itch.io/tiles-towers"
-    },
-    credits: {
-      developers: ["Suryanshu Mittal"],
-      artists: ["Daksh Kaushik"],
-      designers: ["Suryanshu Mittal"],
-      writers: ["Suryanshu Mittal"],
-      specialThanks: ["GameDev.in Community"]
-    }
-  },
-  {
-    name: "Finite Samsara Demo",
-    image: "/images/Samsara.png",
-    brief: "Loop Remains Untouched",
-    genre: "Windows,Unreal Engine, Jam, RPG, Indie",
-    alt: "https://abyss-studios.itch.io/finite-samsara",
-    version: "1.0.0",
-    systemRequirements: {
-      minimum: [
-        "OS: Windows 10 or later",
-        "Processor: Intel Core i3 or equivalent",
-        "Memory: 4 GB RAM",
-        "Graphics: DirectX 11 compatible GPU",
-        "Storage: 500 MB available space"
-      ],
-      recommended: [
-        "OS: Windows 10 or later",
-        "Processor: Intel Core i5 or equivalent",
-        "Memory: 8 GB RAM",
-        "Graphics: DirectX 12 compatible GPU",
-        "Storage: 1 GB available space"
-      ]
-    },
-    downloadLinks: {
-      itch: "https://abyss-studios.itch.io/finite-samsara"
-    },
-    credits: {
-      developers: ["Suryanshu Mittal"],
-      artists: ["Suryanshu Mittal"],
-      designers: ["Suryanshu Mittal"],
-      writers: ["Suryanshu Mittal"],
-      specialThanks: ["Unreal Engine Community, MegaJam, Diversion, Weloveindies"]
-    }
-  },
-  {
-    name: "Coming Soon",
-    image: "/images/soon.jpeg",
-    brief: "",
-    genre: "Coming Soon",
-    alt: "https://the-abyss-games.itch.io/"
   },
 ];
 
-const categories = ["All", "Platformer", "RPG", "Mobile", "Arcade", "Windows", "Jam"];
+const filters = ["All", "Puzzle", "Thriller", "Platformer", "RPG", "Jam"];
 
-export default function GamesLibrary() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
+export default function GamesPage() {
+  const [selectedFilter, setSelectedFilter] = useState("All");
+  const [search, setSearch] = useState("");
   const [selectedGame, setSelectedGame] = useState<typeof games[0] | null>(null);
 
-  const filteredGames = games.filter(game => {
-    const matchesCategory = selectedCategory === "All" || game.genre.toLowerCase().includes(selectedCategory.toLowerCase());
-    const matchesSearch = game.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         game.brief.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const filtered = useMemo(() => {
+    return games.filter((game) => {
+      const byFilter =
+        selectedFilter === "All" || game.genre.toLowerCase().includes(selectedFilter.toLowerCase());
+      const bySearch =
+        game.name.toLowerCase().includes(search.toLowerCase()) ||
+        game.brief.toLowerCase().includes(search.toLowerCase());
+      return byFilter && bySearch;
+    });
+  }, [search, selectedFilter]);
 
   return (
-    <main className="relative min-h-screen">
-      <TechBackground />
-      <Background />
-      <Navbar />
-      
-      {/* Hero Section */}
-      <section className="relative min-h-[40vh] flex items-center justify-center px-4">
-        <div className="text-center z-10">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-[#DC143C] to-[#B01030] bg-clip-text text-transparent">
-            Game Library
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-white/80 max-w-2xl mx-auto">
-            Explore our collection of immersive gaming experiences
+    <main className="site-shell">
+      <section className="cinematic-hero min-h-[56vh]">
+        <div className="hero-overlay"></div>
+        <div className="hero-noise"></div>
+        <div className="content-wrap relative z-10 text-center">
+          <span className="heading-kicker">Game Library</span>
+          <h1 className="section-title text-5xl md:text-6xl">Our Creations</h1>
+          <p className="section-subtitle mx-auto max-w-3xl">
+            Experimental worlds, short narrative arcs, and systems designed for mood-first gameplay.
           </p>
         </div>
       </section>
 
-      {/* Games Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          {/* Search and Filter Section */}
-          <div className="flex flex-col md:flex-row gap-4 mb-8">
+      <section className="section-shell">
+        <div className="content-wrap">
+          <div className="mb-8 flex flex-col gap-4 md:flex-row">
             <input
               type="text"
-              placeholder="Search games..."
-              className="flex-1 px-4 py-2 rounded-lg bg-black/40 backdrop-blur-md text-white border border-[#DC143C]/20 focus:border-[#DC143C]/40 focus:outline-none"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by game name or theme..."
+              className="w-full rounded-xl border border-[#dc143c]/35 bg-black/45 px-4 py-3 text-white outline-none focus:border-[#ff7f9a] md:flex-1"
             />
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              {categories.map((category) => (
+            <div className="flex flex-wrap gap-2">
+              {filters.map((filter) => (
                 <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-lg whitespace-nowrap transition-all duration-300 ${
-                    selectedCategory === category
-                      ? "bg-[#DC143C] text-white"
-                      : "bg-black/40 backdrop-blur-md text-white/80 hover:bg-[#DC143C]/20 border border-[#DC143C]/20"
-                  }`}
+                  key={filter}
+                  onClick={() => setSelectedFilter(filter)}
+                  className={`tag ${selectedFilter === filter ? "!bg-[#dc143c]/35 !text-white" : ""}`}
                 >
-                  {category}
+                  {filter}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Games Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredGames.map((game, index) => (
-              <div key={index} className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#DC143C]/20 to-transparent rounded-xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-                <div className="relative bg-black/40 backdrop-blur-md rounded-xl overflow-hidden border border-[#DC143C]/20 group-hover:border-[#DC143C]/40 transition-all duration-500">
-                  <div 
-                    className="block cursor-pointer"
-                    onClick={() => setSelectedGame(game)}
-                  >
-                    <div className="relative aspect-square overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-                      <Image 
-                        src={game.image} 
-                        alt={game.name} 
-                        layout="fill" 
-                        objectFit="cover" 
-                        className="transform group-hover:scale-110 transition-transform duration-700"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#DC143C]/0 via-transparent to-[#DC143C]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    </div>
-                    <div className="p-6 relative">
-                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#DC143C] to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                      <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-[#DC143C] to-[#B01030] bg-clip-text text-transparent group-hover:from-[#B01030] group-hover:to-[#DC143C] transition-all duration-500">
-                        {game.name}
-                      </h3>
-                      <p className="text-white/70 mb-3 group-hover:text-white/90 transition-colors duration-300">
-                        {game.brief}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {game.genre.split(',').map((genre, i) => (
-                          <span 
-                            key={i}
-                            className="px-3 py-1 text-sm bg-[#DC143C]/10 text-[#DC143C] rounded-full border border-[#DC143C]/20 group-hover:bg-[#DC143C]/20 group-hover:border-[#DC143C]/40 transition-all duration-300"
-                          >
-                            {genre.trim()}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent to-[#DC143C] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right"></div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((game) => (
+              <article key={game.name} className="cinematic-card p-0">
+                <button onClick={() => setSelectedGame(game)} className="block w-full text-left">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
+                    <Image src={game.image} alt={game.name} fill className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-xl font-bold text-white">{game.name}</h3>
+                    <p className="mt-2 text-white/75">{game.brief}</p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {game.genre.split(",").map((g) => (
+                        <span key={`${game.name}-${g}`} className="tag">{g.trim()}</span>
+                      ))}
                     </div>
                   </div>
-                </div>
-              </div>
+                </button>
+              </article>
             ))}
           </div>
-
-          {filteredGames.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-xl text-white/80">No games found matching your criteria</p>
-            </div>
-          )}
         </div>
       </section>
 
-      {/* Game Modal */}
       {selectedGame && (
-        <GameModal
-          isOpen={!!selectedGame}
-          onClose={() => setSelectedGame(null)}
-          game={selectedGame}
-        />
+        <GameModal isOpen={true} onClose={() => setSelectedGame(null)} game={selectedGame} />
       )}
 
       <Footer />
     </main>
   );
-} 
+}
