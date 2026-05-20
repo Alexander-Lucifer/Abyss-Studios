@@ -9,10 +9,10 @@ const team = [
     role: "Founder & Game Director",
     bio: "Visionary behind Abyss Studios with a passion for narrative-driven games and atmospheric storytelling.",
     expertise: ["Game Design","Creative Direction","Project Management", "Team Leadership"],
-    image: "/images/surya.jpg",
+    image: "/images/SuryaAbyss.png",
     social: {
       twitter: "@theabyssant",
-      linkedin: "suryanshu-mittal"
+      linkedin: "devilincarnate"
     }
   },
   {
@@ -20,10 +20,10 @@ const team = [
     role: "Director of Animation and 3D",
     bio: "Brings worlds to life through stunning 3D art and fluid animations that enhance narrative impact.",
     expertise: ["3D Modeling", "Animation", "Visual Effects"],
-    image: "/images/Daksh.jpg",
+    image: "/images/DakshAbyss.png",
     social: {
-      twitter: "@daksh_kaushik",
-      linkedin: "daksh-kaushik"
+      twitter: "",
+      linkedin: "daksh-kaushik-28b93628a"
     }
   },
 
