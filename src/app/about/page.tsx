@@ -53,10 +53,12 @@ export default function AboutPage() {
       {/* Founder Section - Kojima Productions Inspired Layout */}
       <section className="relative w-full overflow-hidden py-24 md:py-32 lg:py-40">
         <div className="content-wrap relative z-20">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* Relative grid container to allow absolute breakout on mobile wrappers */}
+          <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center min-h-[550px] lg:min-h-0">
             
-            {/* Left Side Typography */}
-            <div className="lg:col-span-7 flex flex-col justify-center">
+            {/* Left Side Typography - z-20 to ensure text scales above the portrait background watermarking on mobile */}
+            <div className="relative z-20 lg:col-span-7 flex flex-col justify-center">
               <span className="heading-kicker mb-6 tracking-[0.25em] text-[#ff7f9a] text-xs uppercase font-semibold block">
                 Founder Statement
               </span>
@@ -81,10 +83,10 @@ export default function AboutPage() {
               </p>
             </div>
 
-            {/* Right Side Portrait - Refactored with Flipped Image (-scale-x-100) */}
-            <div className="relative lg:col-span-5 w-full h-[400px] sm:h-[500px] lg:h-[650px] mt-8 lg:mt-0">
+            {/* Right Side Portrait - Fades cleanly behind layout on mobile, snaps beside text on desktop */}
+            <div className="absolute inset-0 z-10 lg:relative lg:inset-auto lg:col-span-5 w-full h-full lg:h-[650px]">
               <div 
-                className="relative w-full h-full opacity-65 transition-opacity duration-500 hover:opacity-80"
+                className="relative w-full h-full opacity-50 lg:opacity-65 transition-opacity duration-500 lg:hover:opacity-80"
                 style={{
                   WebkitMaskImage: 'linear-gradient(to top, transparent 0%, black 20%), linear-gradient(to right, transparent 0%, black 30%)',
                   maskImage: 'linear-gradient(to top, transparent 0%, black 20%), linear-gradient(to right, transparent 0%, black 30%)',
@@ -96,8 +98,8 @@ export default function AboutPage() {
                   src="/images/NOBGfounder.png"
                   alt="Suryanshu Mittal - Founder"
                   fill
-                  // Added transform -scale-x-100 to execute the seamless horizontal flip
-                  className="object-contain object-middle lg:object-right-middle select-none transform -scale-x-100"
+                  // Swapped standard layout anchors over to fix invalid positioning keywords
+                  className="object-contain object-center lg:object-right-bottom select-none transform -scale-x-100"
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   priority
                 />
