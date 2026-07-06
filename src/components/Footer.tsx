@@ -1,13 +1,16 @@
 "use client";
 
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 
 interface FooterProps {
   handleNavClick?: (_sectionId: string) => void;
 }
 
 export default function Footer({ handleNavClick: _handleNavClick }: FooterProps) {
+  const t = useTranslations('Footer');
+
   return (
     <footer className="section-shell pb-10">
       <div className="content-wrap">
@@ -25,7 +28,7 @@ export default function Footer({ handleNavClick: _handleNavClick }: FooterProps)
               <div className="mt-4 flex flex-col gap-2">
                 {[
                   { href: "/", label: "Home" },
-                  { href: "/games", label: "Games" },
+                  { href: "/games", label: "Products" },
                   { href: "/about", label: "About" },
                   { href: "/careers", label: "Careers" },
                   { href: "/contact", label: "Contact" },
@@ -55,19 +58,19 @@ export default function Footer({ handleNavClick: _handleNavClick }: FooterProps)
 
           <div className="mt-8 flex flex-col items-start justify-between gap-4 border-t border-[#dc143c]/20 pt-6 text-sm text-white/60 md:flex-row md:items-center">
             <p>
-              © 2026 Abyss Studios. All rights reserved.
+              {t('copyright', { year: 2026 })}
             </p>
             <div className="flex gap-5">
-              <a href="/privacy-policy" className="hover:text-[#ff7f9a]">
-                Privacy Policy
-              </a>
-              <a href="/terms-of-service" className="hover:text-[#ff7f9a]">
-                Terms of Service
-              </a>
+              <Link href="/privacy-policy" className="hover:text-[#ff7f9a]">
+                {t('privacy')}
+              </Link>
+              <Link href="/terms-of-service" className="hover:text-[#ff7f9a]">
+                {t('terms')}
+              </Link>
             </div>
           </div>
         </div>
       </div>
     </footer>
   );
-} 
+}

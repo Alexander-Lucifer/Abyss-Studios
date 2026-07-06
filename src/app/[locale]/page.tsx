@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import Footer from "@/components/Footer";
+import { useTranslations } from "next-intl";
 
 export default function Home() {
   const [showIntro, setShowIntro] = useState(true);
+  const t = useTranslations('Home');
 
   useEffect(() => {
     const timer = window.setTimeout(() => setShowIntro(false), 2200);
@@ -17,9 +19,9 @@ export default function Home() {
     <main className="site-shell">
       <div className={`opening-sequence ${showIntro ? "opening-sequence-visible" : "opening-sequence-hidden"}`}>
         <div className="opening-film-grain" />
-        <p className="opening-label">Booting cinematic layer...</p>
+        <p className="opening-label">{t('booting')}</p>
         <h1 className="opening-title">ABYSS STUDIOS</h1>
-        <p className="opening-subtitle">Press start to descend</p>
+        <p className="opening-subtitle">{t('pressStart')}</p>
       </div>
 
       <div
@@ -33,44 +35,48 @@ export default function Home() {
         <div className="hero-orb hero-orb-right" />
         <div className="hero-rings" />
         <div className="content-wrap relative z-10 text-center">
-          <span className="heading-kicker">Descend Into Depths</span>
+          <span className="heading-kicker">{t('heroKicker')}</span>
           <h1 className="section-title text-5xl md:text-7xl">Abyss Studios</h1>
           <p className="section-subtitle mx-auto max-w-3xl">
-            We build atmospheric games with cinematic worldbuilding, interactive storytelling,
-            and a dark crimson visual signature.
+            {t('heroSubtitle')}
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link href="/games" className="gaming-button">
-              Explore Games
+              {t('exploreGames')}
             </Link>
             <Link href="/about" className="tag !px-5 !py-3 !text-sm">
-              Studio Story
+              {t('studioStory')}
             </Link>
           </div>
-          <div className="hero-scroll-cue">Scroll to begin your run</div>
+          <div className="hero-scroll-cue">{t('scrollCue')}</div>
         </div>
       </section>
-
       <section className="section-shell">
         <div className="content-wrap mb-8">
           <div className="fun-marquee">
             <div className="fun-marquee-track">
-              <span>Worldbuilding</span>
-              <span>Boss Fights</span>
-              <span>Emotional Story Arcs</span>
-              <span>Experimental Mechanics</span>
-              <span>Stylized Horror</span>
-              <span>Worldbuilding</span>
-              <span>Boss Fights</span>
-              <span>Emotional Story Arcs</span>
+              <div className="fun-marquee-group">
+                <span>Worldbuilding</span>
+                <span>Boss Fights</span>
+                <span>Emotional Story Arcs</span>
+                <span>Experimental Mechanics</span>
+                <span>Stylized Horror</span>
+              </div>
+              <div className="fun-marquee-group">
+                <span>Worldbuilding</span>
+                <span>Boss Fights</span>
+                <span>Emotional Story Arcs</span>
+                <span>Experimental Mechanics</span>
+                <span>Stylized Horror</span>
+              </div>
             </div>
           </div>
         </div>
         <div className="content-wrap grid gap-6 md:grid-cols-3">
           {[
-            { title: "Narrative Design", text: "Layered stories inspired by myth, horror, and speculative fiction." },
-            { title: "Cinematic Craft", text: "Every environment is staged like a scene, with intentional rhythm and mood." },
-            { title: "Playable Emotion", text: "Gameplay systems that translate tension, wonder, and dread into interaction." },
+            { title: t('narrativeTitle'), text: t('narrativeDesc') },
+            { title: t('cinematicTitle'), text: t('cinematicDesc') },
+            { title: t('playableTitle'), text: t('playableDesc') },
           ].map((item) => (
             <article key={item.title} className="cinematic-card fun-card">
               <span className="card-spark" />
@@ -85,17 +91,17 @@ export default function Home() {
         <div className="content-wrap">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <span className="heading-kicker">Featured Projects</span>
-              <h2 className="section-title text-4xl md:text-5xl">Current Showcase</h2>
+              <span className="heading-kicker">{t('featuredKicker')}</span>
+              <h2 className="section-title text-4xl md:text-5xl">{t('featuredTitle')}</h2>
             </div>
-            <Link href="/games" className="tag">View full library</Link>
+            <Link href="/games" className="tag">{t('viewLibrary')}</Link>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
             {[
-              { name: "Tiles & Towers", image: "/images/Tiles.png", brief: "Roll your fate in a strategic puzzle duel." },
-              { name: "Mansion of Chaos", image: "/images/moc.png", brief: "A first-person descent into uncanny architecture." },
-              { name: "Finite Samsara", image: "/images/Samsara.png", brief: "Break the loop or become part of it forever." },
+              { name: "Tiles & Towers", image: "/images/Tiles.png", brief: t('tilesBrief') },
+              { name: "Mansion of Chaos", image: "/images/moc.png", brief: t('mansionBrief') },
+              { name: "Finite Samsara", image: "/images/Samsara.png", brief: t('samsaraBrief') },
             ].map((game) => (
               <article key={game.name} className="cinematic-card fun-card p-0">
                 <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
@@ -115,14 +121,14 @@ export default function Home() {
       <section className="section-shell pb-28">
         <div className="content-wrap">
           <div className="cinematic-card text-center py-12">
-            <span className="heading-kicker">Join The Abyss</span>
-            <h2 className="section-title text-4xl md:text-5xl">Create Strange Worlds With Us</h2>
+            <span className="heading-kicker">{t('ctaKicker')}</span>
+            <h2 className="section-title text-4xl md:text-5xl">{t('ctaTitle')}</h2>
             <p className="section-subtitle mx-auto max-w-2xl">
-              Collaborate with us, pitch your ideas, or apply to the studio.
+              {t('ctaDesc')}
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Link href="/contact" className="gaming-button">Contact Us</Link>
-              <Link href="/careers" className="tag !px-5 !py-3 !text-sm">Careers</Link>
+              <Link href="/services" className="gaming-button">{t('exploreServices')}</Link>
+              <Link href="/contact?type=services" className="tag !px-5 !py-3 !text-sm">{t('requestQuote')}</Link>
             </div>
           </div>
         </div>

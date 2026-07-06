@@ -164,14 +164,14 @@ export default function GameModal({ isOpen, onClose, game }: GameModalProps) {
             )}
 
             {/* Download Buttons */}
-            {game.downloadLinks && (
+            {(game.downloadLinks || (game.alt && game.alt.includes('itch.io'))) && (
               <div className="flex flex-wrap gap-4 mb-8">
-                {game.downloadLinks.epic && (
+                {game.downloadLinks?.epic && (
                   <a
                     href={game.downloadLinks.epic}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-6 py-3 bg-[#2A2A2A] hover:bg-[#3A3A3A] text-white rounded-lg transition-colors duration-300 flex items-center gap-2"
+                    className="gaming-button !px-6 !py-3 flex items-center gap-2"
                   >
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
@@ -179,12 +179,12 @@ export default function GameModal({ isOpen, onClose, game }: GameModalProps) {
                     Epic Games
                   </a>
                 )}
-                {game.downloadLinks.steam && (
+                {game.downloadLinks?.steam && (
                   <a
                     href={game.downloadLinks.steam}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-6 py-3 bg-[#171a21] hover:bg-[#2a2f3a] text-white rounded-lg transition-colors duration-300 flex items-center gap-2"
+                    className="gaming-button !px-6 !py-3 flex items-center gap-2"
                   >
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm0 19.104c-3.924 0-7.104-3.18-7.104-7.104S8.076 4.896 12 4.896s7.104 3.18 7.104 7.104-3.18 7.104-7.104 7.104zm0-13.332c-3.432 0-6.228 2.796-6.228 6.228S8.568 18.228 12 18.228s6.228-2.796 6.228-6.228S15.432 5.772 12 5.772z" />
@@ -192,12 +192,12 @@ export default function GameModal({ isOpen, onClose, game }: GameModalProps) {
                     Steam
                   </a>
                 )}
-                {game.downloadLinks.itch && (
+                {(game.downloadLinks?.itch || (game.alt && game.alt.includes('itch.io'))) && (
                   <a
-                    href={game.downloadLinks.itch}
+                    href={game.downloadLinks?.itch || game.alt}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-6 py-3 bg-[#FA5C5C] hover:bg-[#FF6B6B] text-white rounded-lg transition-colors duration-300 flex items-center gap-2"
+                    className="gaming-button !px-6 !py-3 flex items-center gap-2"
                   >
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />

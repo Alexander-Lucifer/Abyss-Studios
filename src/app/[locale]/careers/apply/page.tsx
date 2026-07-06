@@ -7,7 +7,8 @@ import CountryCodeSelector from "@/components/CountryCodeSelector";
 const CONTACT_EMAIL = "contactus@abyssstudios.site";
 
 const openings = [
-  "NULL",
+  "Game Designer (Systems & Narrative)",
+  "General Pitch (Creative Audition)",
 ];
 
 export default function ApplyPage() {

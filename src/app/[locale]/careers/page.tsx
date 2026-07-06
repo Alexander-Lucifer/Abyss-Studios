@@ -5,10 +5,16 @@ import Footer from "@/components/Footer";
 
 const openings = [
   {
-    title: "NULL",
+    title: "Game Designer (Systems & Narrative)",
     type: "Full-time",
     location: "Delhi / Remote Hybrid",
-    desc: "",
+    desc: "Design mechanical puzzles, pacing curves, and systems for atmospheric game worlds. Translate raw tension, wonder, and narrative-rich lore into player actions.",
+  },
+  {
+    title: "General Pitch (Creative Audition)",
+    type: "Project-based",
+    location: "Remote",
+    desc: "Are you a sound designer, technical artist, writer, or designer who doesn't fit standard roles? Send us your best work and pitch us how you create atmospheric worlds.",
   },
 ];
 

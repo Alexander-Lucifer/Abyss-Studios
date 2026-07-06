@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
+import "../globals.css";
 import Navbar from "@/components/Navbar";
-import { SpeedInsights } from "@vercel/speed-insights/next"
-//import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from '@/components/analytics';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 
 const eurostile = localFont({
-  src: "./fonts/EurostileExtendedBlack.ttf",
+  src: "../fonts/EurostileExtendedBlack.ttf",
   variable: "--font-eurostile",
 });
 
@@ -85,22 +86,29 @@ export const metadata: Metadata = {
   themeColor: '#DC143C',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale } = await params;
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className={`${eurostile.variable} font-sans`}>
-        <Analytics />
-        <SpeedInsights />
-        <Navbar />
-        {children}
+        <NextIntlClientProvider messages={messages}>
+          <Analytics />
+          <SpeedInsights />
+          <Navbar />
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

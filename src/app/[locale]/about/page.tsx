@@ -86,7 +86,7 @@ export default function AboutPage() {
             {/* Right Side Portrait - Fades cleanly behind layout on mobile, snaps beside text on desktop */}
             <div className="absolute inset-0 z-10 lg:relative lg:inset-auto lg:col-span-5 w-full h-full lg:h-[650px]">
               <div 
-                className="relative w-full h-full opacity-50 lg:opacity-65 transition-opacity duration-500 lg:hover:opacity-80"
+                className="relative w-full h-full opacity-20 lg:opacity-65 transition-opacity duration-500 lg:hover:opacity-80"
                 style={{
                   WebkitMaskImage: 'linear-gradient(to top, transparent 0%, black 20%), linear-gradient(to right, transparent 0%, black 30%)',
                   maskImage: 'linear-gradient(to top, transparent 0%, black 20%), linear-gradient(to right, transparent 0%, black 30%)',

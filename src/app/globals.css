@@ -61,26 +61,37 @@
   }
 
   .heading-kicker {
-    @apply mb-4 inline-flex rounded-full border border-[#dc143c]/35 bg-black/45 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white/80;
+    @apply relative mb-4 inline-flex items-center px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.25em] text-white/90 select-none;
+    background: transparent;
+  }
+
+  .heading-kicker::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border: 1px solid rgba(220, 20, 60, 0.45);
+    background: rgba(20, 12, 18, 0.7);
+    transform: skewX(-12deg);
   }
 
   .section-title {
-    @apply mb-5 bg-gradient-to-r from-[#f86082] via-[#dc143c] to-[#9f102b] bg-clip-text text-4xl font-black text-transparent md:text-6xl;
+    @apply mb-5 bg-gradient-to-r from-[#f86082] via-[#dc143c] to-[#9f102b] bg-clip-text text-4xl font-black text-transparent md:text-6xl tracking-[0.05em];
   }
 
   .section-subtitle {
-    @apply text-lg leading-relaxed text-white/75 md:text-xl;
+    @apply text-lg leading-relaxed text-white/75 md:text-xl font-light;
   }
 
   .cinematic-card {
-    @apply relative overflow-hidden rounded-2xl border border-[#f8c36a]/20 bg-[#1d1219]/70 p-6 backdrop-blur-md transition duration-300;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    @apply relative overflow-hidden rounded-xl border border-[#dc143c]/20 bg-[#140c12]/75 p-6 backdrop-blur-md transition-all duration-300;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
   }
 
   .cinematic-card:hover {
-    @apply border-[#f8c36a]/45;
-    transform: translateY(-6px);
-    box-shadow: 0 24px 45px rgba(248, 195, 106, 0.12);
+    @apply border-[#dc143c]/65;
+    transform: translateY(-5px) scale(1.005);
+    box-shadow: 0 25px 50px rgba(220, 20, 60, 0.18);
   }
 
   .cinematic-card::after {
@@ -93,33 +104,57 @@
   }
 
   .gaming-button {
-    @apply relative inline-flex items-center justify-center overflow-hidden rounded-xl border border-[#dc143c]/45 px-7 py-3 text-sm font-bold uppercase tracking-[0.15em] text-white transition duration-300;
-    background: linear-gradient(100deg, rgba(220, 20, 60, 0.95), rgba(91, 42, 103, 0.92));
+    @apply relative inline-flex items-center justify-center px-8 py-3.5 text-sm font-bold uppercase tracking-[0.2em] text-white/95 transition-all duration-300 select-none;
+    background: transparent;
+  }
+
+  .gaming-button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border: 1px solid rgba(220, 20, 60, 0.65);
+    background: linear-gradient(105deg, rgba(220, 20, 60, 0.95), rgba(91, 42, 103, 0.92));
+    transform: skewX(-12deg);
+    transition: all 300ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .gaming-button:hover::after {
+    background: linear-gradient(105deg, rgba(255, 30, 80, 0.98), rgba(120, 50, 140, 0.98));
+    border-color: rgba(255, 30, 80, 0.85);
+    box-shadow: 0 0 25px rgba(220, 20, 60, 0.55);
   }
 
   .gaming-button:hover {
-    transform: translateY(-2px) scale(1.01);
-    box-shadow: 0 14px 30px rgba(220, 20, 60, 0.32);
-  }
-
-  .gaming-button::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -130%;
-    width: 60%;
-    height: 100%;
-    transform: skewX(-20deg);
-    background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.4) 48%, transparent 100%);
-    transition: left 700ms ease;
-  }
-
-  .gaming-button:hover::before {
-    left: 170%;
+    @apply text-white;
+    transform: translateY(-2px);
   }
 
   .tag {
-    @apply rounded-full border border-[#f8c36a]/40 bg-[#f8c36a]/15 px-3 py-1 text-xs uppercase tracking-wide text-[#ffd99c];
+    @apply relative inline-flex items-center justify-center px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-[#ffd99c] transition-all duration-300 select-none;
+    background: transparent;
+  }
+
+  .tag::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border: 1px solid rgba(248, 195, 106, 0.35);
+    background: rgba(248, 195, 106, 0.12);
+    transform: skewX(-8deg);
+    transition: all 300ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .tag:hover::after {
+    background: rgba(248, 195, 106, 0.25);
+    border-color: rgba(248, 195, 106, 0.85);
+    box-shadow: 0 0 12px rgba(248, 195, 106, 0.2);
+  }
+
+  .tag:hover {
+    @apply text-[#fff3db];
+    transform: translateY(-1px);
   }
 }
 
@@ -253,16 +288,24 @@
   border-bottom: 1px solid rgba(220, 20, 60, 0.35);
   background: rgba(0, 0, 0, 0.35);
 }
-
 .fun-marquee-track {
   display: flex;
   width: max-content;
-  gap: 36px;
-  padding: 10px 0;
-  animation: marquee 24s linear infinite;
+  animation: marquee 28s linear infinite;
 }
 
-.fun-marquee-track span {
+.fun-marquee:hover .fun-marquee-track {
+  animation-play-state: paused;
+}
+
+.fun-marquee-group {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 12px 20px;
+}
+
+.fun-marquee-group span {
   text-transform: uppercase;
   letter-spacing: 0.16em;
   font-size: 0.72rem;

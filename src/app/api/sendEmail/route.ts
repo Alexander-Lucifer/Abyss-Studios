@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     
     // Validate required fields
-    const { name, email, subject, message } = body;
+    const { name, email, subject, message, inquiryType, serviceType, budget } = body;
     
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
@@ -26,6 +26,24 @@ export async function POST(request: Request) {
 
     console.log('Received contact form submission from:', name, '(', email, ')');
     
+    // Format additional fields
+    let servicesDetailsText = "";
+    let servicesDetailsHtml = "";
+    if (inquiryType === "services") {
+      servicesDetailsText = `Inquiry Type: Services Inquiry\nService Domain: ${serviceType}\nBudget Level: ${budget}\n\n`;
+      servicesDetailsHtml = `
+        <p><strong>Inquiry Type:</strong> Services Inquiry</p>
+        <p><strong>Service Domain:</strong> ${serviceType}</p>
+        <p><strong>Estimated Budget:</strong> ${budget}</p>
+      `;
+    } else if (inquiryType === "partnership") {
+      servicesDetailsText = `Inquiry Type: Business Partnership Inquiry\n\n`;
+      servicesDetailsHtml = `<p><strong>Inquiry Type:</strong> Business Partnership Inquiry</p>`;
+    } else {
+      servicesDetailsText = `Inquiry Type: General Feedback / Inquiry\n\n`;
+      servicesDetailsHtml = `<p><strong>Inquiry Type:</strong> General Feedback / Inquiry</p>`;
+    }
+
     // Create transporter
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
@@ -53,7 +71,7 @@ New contact form submission from Abyss Studios website:
 Name: ${name}
 Email: ${email}
 Subject: ${subject}
-
+${servicesDetailsText}
 Message:
 ${message}
       `,
@@ -62,6 +80,7 @@ ${message}
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Subject:</strong> ${subject}</p>
+        ${servicesDetailsHtml}
         <h3>Message:</h3>
         <p>${message.replace(/\n/g, '<br>')}</p>
         <hr>
