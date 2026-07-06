@@ -1,0 +1,94 @@
+[
+  {
+    "icon": "🎮",
+    "title": {
+      "en": "Full-Cycle Game Development",
+      "jp": "フルサイクルゲーム開発"
+    },
+    "desc": {
+      "en": "Complete system engineering, gameplay mechanics, and target optimization across major platforms.",
+      "jp": "主要プラットフォーム全体の完全なシステムエンジニアリング、ゲームプレイメカニクス、ターゲット最適化。"
+    },
+    "deliverables": {
+      "en": [
+        "Cross-platform_Development",
+        "Performance optimisation & scripting",
+        "Intelligent UI/UX"
+      ],
+      "jp": [
+        "クロスプラットフォーム・ポーティング (Windows, Mac, コンソール)",
+        "パフォーマンス最適化 ＆ スクリプティング",
+        "インテリジェントな UI/UX デザイン"
+      ]
+    }
+  },
+  {
+    "icon": "👾",
+    "title": {
+      "en": "3D Art & Rigging Pipelines",
+      "jp": "3Dアート＆リギングパイプライン"
+    },
+    "desc": {
+      "en": "Stylized character styling, environment assets, custom shaders, and skeletal rigging matching performance targets.",
+      "jp": "パフォーマンス目標に一致するスタイライズドキャラクター、環境アセット、カスタムシェーダー、およびスケルタルリギング。"
+    },
+    "deliverables": {
+      "en": [
+        "Low-poly and high-poly asset modeling",
+        "Character rigging & custom animations",
+        "Visual effects (VFX) & lighting setup"
+      ],
+      "jp": [
+        "ローポリおよびハイポリのアセットモデリング",
+        "キャラクターリギング ＆ カスタムアニメーション",
+        "ビジュアルエフェクト (VFX) ＆ ライティング設定"
+      ]
+    }
+  },
+  {
+    "icon": "🖋️",
+    "title": {
+      "en": "Narrative & System Design",
+      "jp": "ナラティブ＆システムデザイン"
+    },
+    "desc": {
+      "en": "Structuring game lore, quest configurations, encounter flows, and mathematical balancing loops.",
+      "jp": "ゲームの伝承、クエスト構成、エンカウントフロー、および数学的なバランスループの構築。"
+    },
+    "deliverables": {
+      "en": [
+        "Interactive dialogue & scripting trees",
+        "Level layout & environmental storytelling",
+        "Core gameplay balance & loop mapping"
+      ],
+      "jp": [
+        "インタラクティブな会話 ＆ スクリプトツリー",
+        "レベルレイアウト ＆ 環境ストーリーテリング",
+        "コアゲームプレイバランス ＆ ループマッピング"
+      ]
+    }
+  },
+  {
+    "icon": "⚡",
+    "title": {
+      "en": "Co-Development & Prototyping",
+      "jp": "共同開発＆プロトタイピング"
+    },
+    "desc": {
+      "en": "Seamlessly integrate with your engineering crew or spin up vertical slices to prove out gameplay concepts.",
+      "jp": "エンジニアリングクルーとシームレスに統合するか、ゲームプレイのコンセプトを検証するためのバーティカルスライスを迅速に立ち上げます。"
+    },
+    "deliverables": {
+      "en": [
+        "Rapid playable prototypes",
+        "Physics engines & gameplay components",
+        "External team integration & support"
+      ],
+      "jp": [
+        "迅速なプレイアブルプロトタイプ作成",
+        "物理エンジン ＆ ゲームプレイコンポーネント",
+        "外部チームの統合 ＆ サポート"
+      ]
+    }
+  }
+]

@@ -17,6 +17,8 @@ export async function POST(request: Request) {
       fileName = "games.json";
     } else if (type === "team") {
       fileName = "team.json";
+    } else if (type === "services") {
+      fileName = "services.json";
     } else {
       return NextResponse.json({ message: 'Invalid type parameter specified.' }, { status: 400 });
     }

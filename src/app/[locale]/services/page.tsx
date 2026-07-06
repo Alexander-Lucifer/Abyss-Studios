@@ -1,38 +1,32 @@
 'use client';
 
+import { useState, useEffect } from "react";
 import { Link } from "@/i18n/routing";
 import Footer from "@/components/Footer";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
 
 export default function ServicesPage() {
   const t = useTranslations('Services');
+  const params = useParams();
+  const locale = (params?.locale as "en" | "jp") || "en";
 
-  const services = [
-    {
-      icon: "🎮",
-      title: t('gameDevTitle'),
-      desc: t('gameDevDesc'),
-      deliverables: [t('gameDevDeliv1'), t('gameDevDeliv2'), t('gameDevDeliv3')]
-    },
-    {
-      icon: "👾",
-      title: t('artTitle'),
-      desc: t('artDesc'),
-      deliverables: [t('artDeliv1'), t('artDeliv2'), t('artDeliv3')]
-    },
-    {
-      icon: "🖋️",
-      title: t('narrativeTitle'),
-      desc: t('narrativeDesc'),
-      deliverables: [t('narrativeDeliv1'), t('narrativeDeliv2'), t('narrativeDeliv3')]
-    },
-    {
-      icon: "⚡",
-      title: t('codevTitle'),
-      desc: t('codevDesc'),
-      deliverables: [t('codevDeliv1'), t('codevDeliv2'), t('codevDeliv3')]
-    }
-  ];
+  const [servicesList, setServicesList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch services config dynamically
+  useEffect(() => {
+    fetch("/data/services.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setServicesList(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to load services config:", err);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <main className="site-shell">
@@ -51,29 +45,43 @@ export default function ServicesPage() {
 
       {/* Services Grid */}
       <section className="section-shell">
-        <div className="content-wrap grid gap-6 md:grid-cols-2">
-          {services.map((service) => (
-            <article key={service.title} className="cinematic-card flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-4 mb-4">
-                  <span className="text-4xl">{service.icon}</span>
-                  <h3 className="text-2xl font-bold text-white tracking-wide">{service.title}</h3>
-                </div>
-                <p className="text-white/75 leading-relaxed mb-6 font-light">{service.desc}</p>
-              </div>
-              
-              <div className="border-t border-[#dc143c]/15 pt-4">
-                <h4 className="text-xs uppercase tracking-[0.16em] text-[#ff7f9a] mb-3 font-semibold">{t('keyCapabilities')}</h4>
-                <ul className="space-y-1 text-sm text-white/60">
-                  {service.deliverables.map((item, i) => (
-                    <li key={i} className="flex items-center gap-2">
-                      <span className="text-[#dc143c]">▪</span> {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </article>
-          ))}
+        <div className="content-wrap">
+          {loading ? (
+            <div className="text-center py-20 font-mono text-xs text-white/40">
+              [ SCANNING_CAPABILITY_ARCHIVE... ]
+            </div>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2">
+              {servicesList.map((service, index) => {
+                const title = service.title?.[locale] || service.title?.en || "";
+                const desc = service.desc?.[locale] || service.desc?.en || "";
+                const deliverables = service.deliverables?.[locale] || service.deliverables?.en || service.deliverables || [];
+
+                return (
+                  <article key={index} className="cinematic-card flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center gap-4 mb-4">
+                        <span className="text-4xl">{service.icon}</span>
+                        <h3 className="text-2xl font-bold text-white tracking-wide">{title}</h3>
+                      </div>
+                      <p className="text-white/75 leading-relaxed mb-6 font-light">{desc}</p>
+                    </div>
+                    
+                    <div className="border-t border-[#dc143c]/15 pt-4">
+                      <h4 className="text-xs uppercase tracking-[0.16em] text-[#ff7f9a] mb-3 font-semibold">{t('keyCapabilities')}</h4>
+                      <ul className="space-y-1 text-sm text-white/60">
+                        {deliverables.map((item: string, i: number) => (
+                          <li key={i} className="flex items-center gap-2">
+                            <span className="text-[#dc143c]">▪</span> {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 

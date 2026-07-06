@@ -66,7 +66,8 @@ export default function Home() {
   const [editLogs, setEditLogs] = useState<any[]>([]);
   const [editGames, setEditGames] = useState<any[]>([]);
   const [editTeam, setEditTeam] = useState<any[]>([]);
-  const [cmsTab, setCmsTab] = useState<"logs" | "games" | "team">("logs");
+  const [editServices, setEditServices] = useState<any[]>([]);
+  const [cmsTab, setCmsTab] = useState<"logs" | "games" | "team" | "services">("logs");
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [serverlessSaveError, setServerlessSaveError] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>("");
@@ -143,6 +144,10 @@ export default function Home() {
       const teamRes = await fetch('/data/team.json');
       const teamData = await teamRes.json();
       setEditTeam(JSON.parse(JSON.stringify(teamData)));
+
+      const servicesRes = await fetch('/data/services.json');
+      const servicesData = await servicesRes.json();
+      setEditServices(JSON.parse(JSON.stringify(servicesData)));
     } catch (err) {
       console.error("Failed to load CMS data:", err);
     }
@@ -285,8 +290,42 @@ export default function Home() {
     setEditTeam(list);
   };
 
+  // Services manipulation
+  const handleAddService = () => {
+    const newService = {
+      icon: "✨",
+      title: {
+        en: "New Capable Service",
+        jp: "新しいケイパビリティサービス"
+      },
+      desc: {
+        en: "Service overview details description.",
+        jp: "サービスの概要説明文。"
+      },
+      deliverables: {
+        en: ["Key capability one", "Key capability two"],
+        jp: ["主な成果物・機能１", "主な成果物・機能２"]
+      }
+    };
+    setEditServices([newService, ...editServices]);
+  };
+
+  const handleDeleteService = (index: number) => {
+    setEditServices(editServices.filter((_, idx) => idx !== index));
+  };
+
+  const handleMoveService = (index: number, direction: 'up' | 'down') => {
+    const nextIndex = direction === 'up' ? index - 1 : index + 1;
+    if (nextIndex < 0 || nextIndex >= editServices.length) return;
+    const list = [...editServices];
+    const temp = list[index];
+    list[index] = list[nextIndex];
+    list[nextIndex] = temp;
+    setEditServices(list);
+  };
+
   // Save config polymorphic CMS writer
-  const handleSaveCms = async (type: "logs" | "games" | "team") => {
+  const handleSaveCms = async (type: "logs" | "games" | "team" | "services") => {
     setIsSaving(true);
     setServerlessSaveError(false);
     setSuccessMessage("");
@@ -295,6 +334,7 @@ export default function Home() {
     if (type === "logs") payloadData = editLogs;
     else if (type === "games") payloadData = editGames;
     else if (type === "team") payloadData = editTeam;
+    else if (type === "services") payloadData = editServices;
 
     try {
       const response = await fetch('/api/cms', {
@@ -333,6 +373,9 @@ export default function Home() {
     } else if (cmsTab === "team") {
       payload = editTeam;
       filename = "team.json";
+    } else if (cmsTab === "services") {
+      payload = editServices;
+      filename = "services.json";
     }
 
     const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
@@ -846,6 +889,16 @@ export default function Home() {
                 >
                   [ TEAM_CMS ]
                 </button>
+                <button
+                  onClick={() => setCmsTab("services")}
+                  className={`px-3 py-1.5 border rounded transition-all duration-300 ${
+                    cmsTab === "services" 
+                      ? "border-[#dc143c] bg-[#dc143c]/10 text-white font-bold" 
+                      : "border-white/5 text-white/50 hover:text-white"
+                  }`}
+                >
+                  [ SERVICES_CMS ]
+                </button>
               </div>
 
               {/* Serverless Warnings and Success Messages */}
@@ -859,7 +912,7 @@ export default function Home() {
                 <div className="bg-amber-500/10 border border-amber-500/40 text-amber-300 rounded p-4 mb-4 shrink-0 space-y-2">
                   <p className="font-bold">⚠️ RUNTIME ENVIRONMENT DETECTED AS SERVERLESS</p>
                   <p className="font-light">
-                    Direct server writes are blocked by Vercel/Amplify. To update the website, click download below to save the file, replace it at <code className="bg-black/40 px-1 py-0.5 rounded text-white font-bold">public/data/{cmsTab === "logs" ? "transmission-log.json" : cmsTab === "games" ? "games.json" : "team.json"}</code> in your project, and commit it to git.
+                    Direct server writes are blocked by Vercel/Amplify. To update the website, click download below to save the file, replace it at <code className="bg-black/40 px-1 py-0.5 rounded text-white font-bold">public/data/{cmsTab === "logs" ? "transmission-log.json" : cmsTab === "games" ? "games.json" : cmsTab === "team" ? "team.json" : "services.json"}</code> in your project, and commit it to git.
                   </p>
                   <button 
                     onClick={handleDownloadCmsJson}
@@ -1558,6 +1611,179 @@ export default function Home() {
                   </div>
                 ))}
 
+                {/* 4. Services Tab Editor */}
+                {cmsTab === "services" && editServices.map((service, index) => (
+                  <div key={index} className="border border-white/5 bg-black/40 rounded-lg p-4 space-y-3 relative group">
+                    <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-white/40 font-bold">SERVICE #{index + 1}</span>
+                        <input
+                          type="text"
+                          value={service.icon || "✨"}
+                          onChange={(e) => {
+                            const updated = [...editServices];
+                            updated[index].icon = e.target.value;
+                            setEditServices(updated);
+                          }}
+                          placeholder="ICON EMOJI"
+                          className="w-16 bg-black/60 border border-white/10 rounded px-2 py-1 text-white font-bold text-[10px] text-center"
+                        />
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleMoveService(index, 'up')}
+                          disabled={index === 0}
+                          className="px-2 py-1 border border-white/10 hover:bg-white/5 rounded text-white disabled:opacity-30 disabled:hover:bg-transparent"
+                        >
+                          ▲
+                        </button>
+                        <button
+                          onClick={() => handleMoveService(index, 'down')}
+                          disabled={index === editServices.length - 1}
+                          className="px-2 py-1 border border-white/10 hover:bg-white/5 rounded text-white disabled:opacity-30 disabled:hover:bg-transparent"
+                        >
+                          ▼
+                        </button>
+                        <button
+                          onClick={() => handleDeleteService(index)}
+                          className="px-2 py-1 border border-red-500/30 hover:border-red-500 hover:bg-red-500/10 text-red-400 rounded"
+                        >
+                          DELETE
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-1">
+                        <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">SERVICE TITLE (EN)</label>
+                        <input
+                          type="text"
+                          value={service.title?.en || ""}
+                          onChange={(e) => {
+                            const updated = [...editServices];
+                            if (!updated[index].title) updated[index].title = {};
+                            updated[index].title.en = e.target.value;
+                            setEditServices(updated);
+                          }}
+                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center">
+                          <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">SERVICE TITLE (JP)</label>
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              if (!service.title?.en) return;
+                              const translated = await translateText(service.title.en);
+                              if (translated) {
+                                const updated = [...editServices];
+                                if (!updated[index].title) updated[index].title = {};
+                                updated[index].title.jp = translated;
+                                setEditServices(updated);
+                              }
+                            }}
+                            className="text-[9px] text-[#ff7f9a] hover:underline"
+                          >
+                            [ ⚡ AUTO-TRANSLATE ]
+                          </button>
+                        </div>
+                        <input
+                          type="text"
+                          value={service.title?.jp || ""}
+                          onChange={(e) => {
+                            const updated = [...editServices];
+                            if (!updated[index].title) updated[index].title = {};
+                            updated[index].title.jp = e.target.value;
+                            setEditServices(updated);
+                          }}
+                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-1">
+                        <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">SERVICE OVERVIEW (EN)</label>
+                        <textarea
+                          rows={2}
+                          value={service.desc?.en || ""}
+                          onChange={(e) => {
+                            const updated = [...editServices];
+                            if (!updated[index].desc) updated[index].desc = {};
+                            updated[index].desc.en = e.target.value;
+                            setEditServices(updated);
+                          }}
+                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center">
+                          <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">SERVICE OVERVIEW (JP)</label>
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              if (!service.desc?.en) return;
+                              const translated = await translateText(service.desc.en);
+                              if (translated) {
+                                const updated = [...editServices];
+                                if (!updated[index].desc) updated[index].desc = {};
+                                updated[index].desc.jp = translated;
+                                setEditServices(updated);
+                              }
+                            }}
+                            className="text-[9px] text-[#ff7f9a] hover:underline"
+                          >
+                            [ ⚡ AUTO-TRANSLATE ]
+                          </button>
+                        </div>
+                        <textarea
+                          rows={2}
+                          value={service.desc?.jp || ""}
+                          onChange={(e) => {
+                            const updated = [...editServices];
+                            if (!updated[index].desc) updated[index].desc = {};
+                            updated[index].desc.jp = e.target.value;
+                            setEditServices(updated);
+                          }}
+                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-1">
+                        <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">KEY CAPABILITIES (EN, ONE PER LINE)</label>
+                        <textarea
+                          rows={3}
+                          value={service.deliverables?.en?.join("\n") || ""}
+                          onChange={(e) => {
+                            const updated = [...editServices];
+                            if (!updated[index].deliverables) updated[index].deliverables = {};
+                            updated[index].deliverables.en = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
+                            setEditServices(updated);
+                          }}
+                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-xs"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">KEY CAPABILITIES (JP, ONE PER LINE)</label>
+                        <textarea
+                          rows={3}
+                          value={service.deliverables?.jp?.join("\n") || ""}
+                          onChange={(e) => {
+                            const updated = [...editServices];
+                            if (!updated[index].deliverables) updated[index].deliverables = {};
+                            updated[index].deliverables.jp = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
+                            setEditServices(updated);
+                          }}
+                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-xs"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
               </div>
 
               {/* Bottom toolbar action buttons */}
@@ -1584,6 +1810,14 @@ export default function Home() {
                     className="border border-[#dc143c] hover:bg-[#dc143c]/15 text-[#ff7f9a] font-bold rounded px-4 py-2.5 transition-all"
                   >
                     + ADD NEW MEMBER
+                  </button>
+                )}
+                {cmsTab === "services" && (
+                  <button
+                    onClick={handleAddService}
+                    className="border border-[#dc143c] hover:bg-[#dc143c]/15 text-[#ff7f9a] font-bold rounded px-4 py-2.5 transition-all"
+                  >
+                    + ADD NEW SERVICE
                   </button>
                 )}
 
