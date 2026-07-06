@@ -1,0 +1,361 @@
+[
+  {
+    "name": "Tiles & Towers",
+    "image": "/images/Tiles.png",
+    "key": "tiles",
+    "brief": {
+      "en": "A tactical grid-combat board game where quick positioning determines survival inside decaying arenas.",
+      "jp": "崩壊するアリーナ内で素早いポジショニングが生死を分ける、戦術的なグリッド戦闘ボードゲーム。"
+    },
+    "genre": "Puzzle,Strategy,Windows,Mac,Web,Jam",
+    "alt": "https://abyss-studios.itch.io/tiles-towers",
+    "engine": "Unity",
+    "version": "v1.4.2",
+    "screenshots": [
+      "/images/Tiles.png",
+      "/images/moc.png",
+      "/images/Samsara.png"
+    ],
+    "features": {
+      "en": [
+        "Tactical board dueling mechanics against intelligent AI opponents.",
+        "Clean, high-contrast neon vector art direction.",
+        "Procedural arena board layouts with random trap tiles.",
+        "Immersive synthwave soundscapes that sync with player action."
+      ],
+      "jp": [
+        "インテリジェントなAI対戦相手に対する戦術的なボードデュエルメカニズム。",
+        "クリーンで高コントラストなネオンベクターアートのディレクション。",
+        "ランダムなトラップタイルを備えた手続き型アリーナボードのレイアウト。",
+        "プレイヤーのアクションと同期する没入型シンセウェイヴのサウンドスケープ。"
+      ]
+    },
+    "systemRequirements": {
+      "minimum": [
+        "OS: Windows 10 / macOS 10.13",
+        "Memory: 4 GB RAM",
+        "Graphics: Integrated Graphics Card",
+        "Storage: 200 MB"
+      ],
+      "recommended": [
+        "OS: Windows 11 / macOS 12+",
+        "Memory: 8 GB RAM",
+        "Graphics: Dedicated GPU",
+        "Storage: 200 MB"
+      ]
+    },
+    "credits": {
+      "developers": [
+        "Suryanshu Mittal"
+      ],
+      "designers": [
+        "Suryanshu Mittal"
+      ],
+      "artists": [
+        "Daksh Kaushik"
+      ],
+      "specialThanks": [
+        "GDAI_BYOG_Team"
+      ]
+    }
+  },
+  {
+    "name": "Mansion of Chaos",
+    "image": "/images/moc.png",
+    "key": "mansion",
+    "brief": {
+      "en": "First-person perspective psychological horror focusing on spatial loops and audio triggers.",
+      "jp": "空間ループとオーディオトリガーに焦点を当てた、一人称視点の心理的ホラー。"
+    },
+    "genre": "Exploration,Thriller,Windows,Jam",
+    "alt": "https://the-abyss-games.itch.io/mansion-of-chaos",
+    "engine": "Unreal",
+    "version": "v1.1.0",
+    "screenshots": [
+      "/images/moc.png",
+      "/images/Tiles.png",
+      "/images/Samsara.png"
+    ],
+    "features": {
+      "en": [
+        "First-person psychological suspense and exploration.",
+        "Uncanny shifting environment layout architecture.",
+        "Physiological sound-sensitive alerts that trigger dynamic shifts.",
+        "Multiple ending paths and secret exploration notes."
+      ],
+      "jp": [
+        "一人称視点の心理的なサスペンスと探索。",
+        "不思議に変化する環境レイアウトのアーキテクチャ。",
+        "動的な変化を引き起こす生理学的な音に敏感なアラート。",
+        "複数のエンディングパスと秘密の探索ノート。"
+      ]
+    },
+    "systemRequirements": {
+      "minimum": [
+        "OS: Windows 10 (64-bit)",
+        "Processor: Intel i5 / AMD Ryzen 3",
+        "Memory: 8 GB RAM",
+        "Graphics: NVIDIA GTX 1050",
+        "Storage: 500 MB"
+      ],
+      "recommended": [
+        "OS: Windows 11",
+        "Processor: Intel i7 / Ryzen 5",
+        "Memory: 16 GB RAM",
+        "Graphics: GTX 1070 / RTX 2060",
+        "Storage: 500 MB"
+      ]
+    },
+    "credits": {
+      "developers": [
+        "Suryanshu Mittal"
+      ],
+      "designers": [
+        "Suryanshu Mittal"
+      ],
+      "artists": [
+        "Daksh Kaushik"
+      ],
+      "specialThanks: ": [
+        "Scream Jam Organizers"
+      ]
+    }
+  },
+  {
+    "name": "Finite Samsara",
+    "image": "/images/Samsara.png",
+    "key": "samsara",
+    "brief": {
+      "en": "A race against simulated heart rate telemetry indexes to resolve architectural anomalies.",
+      "jp": "建築的異常を解決するために、シミュレートされた心拍数テレメトリ指標に対抗するレース。"
+    },
+    "genre": "First-Person,Puzzle,Windows,Jam",
+    "alt": "https://abyss-studios.itch.io/finite-samsara",
+    "engine": "Unreal",
+    "version": "v1.0.3",
+    "screenshots": [
+      "/images/Samsara.png",
+      "/images/moc.png",
+      "/images/Tiles.png"
+    ],
+    "features": {
+      "en": [
+        "Real-time circular loop countdown puzzle system.",
+        "Audio cues signaling ambient threat levels.",
+        "Simulated body sensor telemetry hud integration.",
+        "Physical box and dial environment lock puzzles."
+      ],
+      "jp": [
+        "リアルタイムの円形ループカウントダウンパズルシステム。",
+        "周囲の脅威レベルを示す音声の手がかり。",
+        "シミュレートされたボディセンサーテレメトリHUDの統合。",
+        "物理的なボックスとダイヤルの環境ロックパズル。"
+      ]
+    },
+    "systemRequirements": {
+      "minimum": [
+        "OS: Windows 10",
+        "Processor: Dual-Core CPU",
+        "Memory: 4 GB RAM",
+        "Graphics: NVIDIA GTX 960",
+        "Storage: 400 MB"
+      ],
+      "recommended": [
+        "OS: Windows 11",
+        "Processor: Quad-Core i5",
+        "Memory: 8 GB RAM",
+        "Graphics: GTX 1050 Ti",
+        "Storage: 400 MB"
+      ]
+    },
+    "credits": {
+      "developers": [
+        "Suryanshu Mittal"
+      ],
+      "designers": [
+        "Suryanshu Mittal"
+      ],
+      "artists": [
+        "Suryanshu Mittal"
+      ],
+      "specialThanks": [
+        "Unreal_MegaJams"
+      ]
+    }
+  },
+  {
+    "name": "God Of War Lite",
+    "image": "/images/gow.png",
+    "key": "gow",
+    "brief": {
+      "en": "Sidescrolling action combat engine honoring legendary hacks and slash titles.",
+      "jp": "伝説的なハックアンドスラッシュタイトルに敬意を表したサイドスクロールアクション戦闘エンジン。"
+    },
+    "genre": "Platformer,RPG,Windows",
+    "alt": "https://the-abyss-games.itch.io/god-of-war-lite",
+    "engine": "",
+    "version": "v0.8.2",
+    "screenshots": [
+      "/images/gow.png",
+      "/images/Tiles.png",
+      "/images/moc.png"
+    ],
+    "features": {
+      "en": [
+        "Sidescrolling action combat with chain hit dynamic combos.",
+        "Stylized pixel art animations with multilayer parallax scrolls.",
+        "Unique character upgrade abilities and unlockable attacks.",
+        "Nostalgic synth chiptune fight track."
+      ],
+      "jp": [
+        "チェーンヒットの動的コンボを備えたサイドスクロールアクション戦闘。",
+        "多層パララックススクロールを備えた、様式化されたピクセルアートアニメーション。",
+        "独自のキャラクターアップグレード能力とロック解除可能な攻撃。",
+        "ノスタルジックなシンセチップチューン戦闘トラック。"
+      ]
+    },
+    "systemRequirements": {
+      "minimum": [
+        "OS: Windows 7/10",
+        "Processor: 2.0 GHz Dual Core",
+        "Memory: 2 GB RAM",
+        "Graphics: Intel HD Graphics",
+        "Storage: 100 MB"
+      ],
+      "recommended": [
+        "OS: Windows 10",
+        "Processor: 2.5 GHz Quad Core",
+        "Memory: 4 GB RAM",
+        "Graphics: 1 GB Dedicated VRAM",
+        "Storage: 100 MB"
+      ]
+    },
+    "credits": {
+      "developers": [
+        "Suryanshu Mittal"
+      ],
+      "designers": [
+        "Suryanshu Mittal"
+      ],
+      "artists": [],
+      "specialThanks": [
+        "Santa_Monica_Studio_Team"
+      ]
+    }
+  },
+  {
+    "name": "Seek A Little",
+    "image": "/images/sal.png",
+    "key": "seek",
+    "brief": {
+      "en": "Soothing hand-drawn isometric search challenges with ambient soundtrack logs.",
+      "jp": "アンビエントサウンドトラックログを備えた、心地よい手書きの等角投影探索チャレンジ。"
+    },
+    "genre": "Thriller,Exploration,Windows,Jam",
+    "alt": "https://the-abyss-games.itch.io/seek-a-little",
+    "engine": "Unreal",
+    "version": "v1.0.0",
+    "screenshots": [
+      "/images/sal.png",
+      "/images/Tiles.png",
+      "/images/moc.png"
+    ],
+    "features": {
+      "en": [
+        "Isometric seek-and-acquire puzzles.",
+        "Minimalist hand-illustrated visual aesthetics.",
+        "Simulated shadow field of view maps.",
+        "Warm atmospheric acoustic background tracks."
+      ],
+      "jp": [
+        "等角投影シークアンドアクワイアパズル。",
+        "ミニマリストで手描きされたビジュアル美学。",
+        "シミュレートされたシャドウ視野マップ。",
+        "温かみのある雰囲気のアコースティックバックグラウンドトラック。"
+      ]
+    },
+    "systemRequirements": {
+      "minimum": [
+        "OS: Windows 10",
+        "Memory: 4 GB RAM",
+        "Graphics: Integrated Graphics Card",
+        "Storage: 150 MB"
+      ],
+      "recommended": [
+        "OS: Windows 11",
+        "Memory: 8 GB RAM",
+        "Graphics: Dedicated GPU",
+        "Storage: 150 MB"
+      ]
+    },
+    "credits": {
+      "developers": [
+        "Suryanshu Mittal"
+      ],
+      "designers": [
+        "Suryanshu Mittal"
+      ],
+      "artists": [],
+      "specialThanks": [
+        "Brackeys"
+      ]
+    }
+  },
+  {
+    "name": "Under Beast",
+    "image": "/images/ub.png",
+    "key": "beast",
+    "brief": {
+      "en": "A Metroidvania action prototype mapping complex subterranean layouts.",
+      "jp": "複雑な地下レイアウトをマッピングするメトロイドヴァニアアクションプロトタイプ。"
+    },
+    "genre": "Platformer,RPG,Windows",
+    "alt": "https://the-abyss-games.itch.io/under-beast",
+    "engine": "",
+    "version": "v0.9.1",
+    "screenshots": [
+      "/images/ub.png",
+      "/images/Tiles.png",
+      "/images/moc.png"
+    ],
+    "features": {
+      "en": [
+        "Metroidvania combat loops and item tracking grids.",
+        "Labyrinth level mapping with destructible wall secrets.",
+        "Challenging boss combat triggers.",
+        "Upgradable stamina and ability slots."
+      ],
+      "jp": [
+        "メトロイドヴァニア戦闘ループとアイテム追跡グリッド。",
+        "破壊可能な壁の秘密を持つ迷宮レベルのマッピング。",
+        "挑戦的なボス戦闘トリガー。",
+        "アップグレード可能なスタミナとアビリティスロット。"
+      ]
+    },
+    "systemRequirements": {
+      "minimum": [
+        "OS: Windows 10 (64-bit)",
+        "Processor: Intel Core i3",
+        "Memory: 4 GB RAM",
+        "Graphics: Intel HD 4000",
+        "Storage: 300 MB"
+      ],
+      "recommended": [
+        "OS: Windows 11",
+        "Processor: Intel Core i5",
+        "Memory: 8 GB RAM",
+        "Graphics: GTX 960",
+        "Storage: 300 MB"
+      ]
+    },
+    "credits": {
+      "developers": [
+        "Suryanshu Mittal"
+      ],
+      "designers": [
+        "Suryanshu Mittal"
+      ],
+      "artists": []
+    }
+  }
+]

@@ -1,13 +1,17 @@
 'use client';
 
+import { useState } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
 import Footer from "@/components/Footer";
 import { useTranslations } from "next-intl";
 
+const YOUTUBE_ID = "zK4Ue0hX7kQ";
+
 export default function TilesAndTowersPage() {
   const t = useTranslations('TilesAndTowers');
   const tg = useTranslations('Games');
+  const [showTrailer, setShowTrailer] = useState(false);
 
   return (
     <main className="site-shell">
@@ -43,6 +47,46 @@ export default function TilesAndTowersPage() {
             <Link href="/games" className="tag !px-5 !py-3 !text-sm">
               {tg('allCreations')}
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Video Showcase Section (Inline Integration like Kojima Productions) */}
+      <section className="border-t border-b border-[#dc143c]/15 bg-black/30 py-16">
+        <div className="content-wrap max-w-4xl">
+          <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-[#dc143c]/20 bg-black shadow-2xl">
+            {!showTrailer ? (
+              <div 
+                className="relative w-full h-full group cursor-pointer" 
+                onClick={() => setShowTrailer(true)}
+              >
+                <Image
+                  src="/images/Tiles.png"
+                  alt="Watch Trailer Placeholder"
+                  fill
+                  className="object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500 scale-105 group-hover:scale-100 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+                
+                {/* Play Button Overlay */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+                  <div className="h-16 w-16 rounded-full border border-[#dc143c]/60 bg-black/60 backdrop-blur-md flex items-center justify-center text-white text-lg group-hover:scale-110 group-hover:bg-[#dc143c] group-hover:border-[#ff7f9a] transition-all duration-300 shadow-lg shadow-[#dc143c]/20">
+                    ▶
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.3em] text-[#ffd99c] font-bold font-mono select-none">
+                    {tg('watchTrailer')}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${YOUTUBE_ID}?autoplay=1&enablejsapi=1&playsinline=1`}
+                title="Game Trailer"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full border-0"
+              />
+            )}
           </div>
         </div>
       </section>

@@ -1,71 +1,40 @@
 'use client';
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import Footer from "@/components/Footer";
 import GameModal from "@/components/GameModal";
 import { useTranslations } from "next-intl";
-
-const games = [
-  {
-    name: "Tiles & Towers",
-    image: "/images/Tiles.png",
-    key: "tiles",
-    brief: "",
-    genre: "Puzzle,Strategy,Windows,Mac,Web,Jam",
-    alt: "https://abyss-studios.itch.io/tiles-towers",
-  },
-  {
-    name: "Mansion of Chaos",
-    image: "/images/moc.png",
-    key: "mansion",
-    brief: "",
-    genre: "Exploration,Thriller,Windows,Jam",
-    alt: "https://the-abyss-games.itch.io/mansion-of-chaos",
-  },
-  {
-    name: "Finite Samsara",
-    image: "/images/Samsara.png",
-    key: "samsara",
-    brief: "",
-    genre: "First-Person,Puzzle,Windows,Jam",
-    alt: "https://abyss-studios.itch.io/finite-samsara",
-  },
-  {
-    name: "God Of War Lite",
-    image: "/images/gow.png",
-    key: "gow",
-    brief: "",
-    genre: "Platformer,RPG,Windows",
-    alt: "https://the-abyss-games.itch.io/god-of-war-lite",
-  },
-  {
-    name: "Seek A Little",
-    image: "/images/sal.png",
-    key: "seek",
-    brief: "",
-    genre: "Thriller,Exploration,Windows,Jam",
-    alt: "https://the-abyss-games.itch.io/seek-a-little",
-  },
-  {
-    name: "Under Beast",
-    image: "/images/ub.png",
-    key: "beast",
-    brief: "",
-    genre: "Platformer,RPG,Windows",
-    alt: "https://the-abyss-games.itch.io/under-beast",
-  },
-];
+import { useParams } from "next/navigation";
 
 const filters = ["All", "Puzzle", "Thriller", "Platformer", "RPG", "Jam"];
 
 export default function GamesPage() {
   const t = useTranslations('Games');
+  const params = useParams();
+  const locale = (params?.locale as "en" | "jp") || "en";
+
+  const [gamesList, setGamesList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [search, setSearch] = useState("");
-  const [selectedGame, setSelectedGame] = useState<typeof games[0] | null>(null);
+  const [selectedGame, setSelectedGame] = useState<any | null>(null);
 
-  const getGameBrief = (key: string) => {
+  // Dynamic config fetching
+  useEffect(() => {
+    fetch("/data/games.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setGamesList(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to load games config:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  const getGameBrief = (key: string, briefObj?: any) => {
     switch (key) {
       case "tiles": return t('tilesBrief');
       case "mansion": return t('mansionBrief');
@@ -73,7 +42,7 @@ export default function GamesPage() {
       case "gow": return t('gowBrief');
       case "seek": return t('seekBrief');
       case "beast": return t('beastBrief');
-      default: return "";
+      default: return briefObj?.[locale] || briefObj?.en || "";
     }
   };
 
@@ -90,16 +59,16 @@ export default function GamesPage() {
   };
 
   const filtered = useMemo(() => {
-    return games.filter((game) => {
+    return gamesList.filter((game) => {
       const byFilter =
         selectedFilter === "All" || game.genre.toLowerCase().includes(selectedFilter.toLowerCase());
-      const brief = getGameBrief(game.key);
+      const brief = getGameBrief(game.key, game.brief);
       const bySearch =
         game.name.toLowerCase().includes(search.toLowerCase()) ||
         brief.toLowerCase().includes(search.toLowerCase());
       return byFilter && bySearch;
     });
-  }, [search, selectedFilter, t]);
+  }, [gamesList, search, selectedFilter, locale]);
 
   return (
     <main className="site-shell">
@@ -138,33 +107,42 @@ export default function GamesPage() {
             </div>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((game) => (
-              <article key={game.name} className="cinematic-card p-0">
-                <button 
-                  onClick={() => {
-                    const brief = getGameBrief(game.key);
-                    setSelectedGame({ ...game, brief });
-                  }} 
-                  className="block w-full text-left"
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
-                    <Image src={game.image} alt={game.name} fill className="object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
-                  </div>
-                  <div className="p-5">
-                    <h3 className="text-xl font-bold text-white">{game.name}</h3>
-                    <p className="mt-2 text-white/75">{getGameBrief(game.key)}</p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {game.genre.split(",").map((g) => (
-                        <span key={`${game.name}-${g}`} className="tag">{g.trim()}</span>
-                      ))}
+          {loading ? (
+            <div className="text-center py-20 font-mono text-xs text-white/40">
+              [ RETRIEVING_CREATIONS_ARCHIVE... ]
+            </div>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {filtered.map((game) => (
+                <article key={game.name} className="cinematic-card p-0">
+                  <button 
+                    onClick={() => {
+                      const brief = getGameBrief(game.key, game.brief);
+                      const features = game.features?.[locale] || game.features?.en || game.features || [];
+                      setSelectedGame({ ...game, brief, features });
+                    }} 
+                    className="block w-full text-left"
+                  >
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
+                      <Image src={game.image} alt={game.name} fill className="object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
                     </div>
-                  </div>
-                </button>
-              </article>
-            ))}
-          </div>
+                    <div className="p-5">
+                      <h3 className="text-xl font-bold text-white">{game.name}</h3>
+                      <p className="mt-2 text-white/75 text-sm line-clamp-2">
+                        {getGameBrief(game.key, game.brief)}
+                      </p>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {game.genre.split(",").map((g: string) => (
+                          <span key={`${game.name}-${g}`} className="tag">{g.trim()}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </button>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

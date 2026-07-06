@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Suryanshu Mittal",
+    "role": {
+      "en": "Founder / Lead Architect",
+      "jp": "創設者 / リードアーキテクト"
+    },
+    "bio": {
+      "en": "Pioneering interactive atmospheric mechanics and system programming loops inside Abyss. Suryanshu focuses on gameplay design feel and structural integrity.",
+      "jp": "Abyss内でインタラクティブな雰囲気のメカニズムとシステムプログラミングループを開拓。スリヤンシュは、ゲームプレイデザインの感触と構造的完全性に焦点を当てています。"
+    },
+    "expertise": [
+      "Engine Architecture",
+      "System Optimization",
+      "Atmospheric Design",
+      "Gameplay Mechanics"
+    ],
+    "image": "/images/SuryaAbyss.png",
+    "social": {
+      "twitter": "@theabyssant",
+      "linkedin": "devilincarnate"
+    },
+    "stats": [
+      { "label": "Commit Frequency", "value": 92 },
+      { "label": "Coffee Intake", "value": 85 },
+      { "label": "Design Focus", "value": 95 },
+      { "label": "Uncanny Resonance", "value": 88 }
+    ],
+    "subjectId": "CORE_SUBJECT::01"
+  },
+  {
+    "name": "Daksh Kaushik",
+    "role": {
+      "en": "Co-Founder / Art Director",
+      "jp": "共同創設者 / アートディレクター"
+    },
+    "bio": {
+      "en": "Crafting the visual soul and auditory identity of our projects. Daksh designs uncanny spaces and low-frequency sonic structures that define the studio's style.",
+      "jp": "プロジェクトの視覚的な魂と聴覚的なアイデンティティを構築。ダクシュは、スタジオのスタイルを定義する不気味な空間と低周波音響構造をデザインします。"
+    },
+    "expertise": [
+      "Cinematic Lighting",
+      "Uncanny Environments",
+      "Soundscape Engineering"
+    ],
+    "image": "/images/DakshAbyss.png",
+    "social": {
+      "twitter": "",
+      "linkedin": "daksh-kaushik-28b93628a"
+    },
+    "stats": [
+      { "label": "Render Precision", "value": 96 },
+      { "label": "Atmosphere Scale", "value": 90 },
+      { "label": "Pixel Perfect Ratio", "value": 94 },
+      { "label": "Aesthetic Coherence", "value": 92 }
+    ],
+    "subjectId": "CORE_SUBJECT::02"
+  }
+]

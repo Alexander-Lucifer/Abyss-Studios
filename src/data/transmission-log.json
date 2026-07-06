@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "timestamp": "2026-07-06",
+    "tag": {
+      "en": "RELEASED",
+      "jp": "配信中"
+    },
+    "text": {
+      "en": "Mansion of Chaos performance update went live. Optimized occlusion culling, improving stability by 25%.",
+      "jp": "『Mansion of Chaos』のパフォーマンスアップデートをリリース。オクルージョンカリングを最適化し、安定性が25%向上。"
+    }
+  },
+  {
+    "id": "2",
+    "timestamp": "2026-07-05",
+    "tag": {
+      "en": "MILESTONE",
+      "jp": "マイルストーン"
+    },
+    "text": {
+      "en": "Finite Samsara interactive gaze-tracking systems verified under mock telemetry environments.",
+      "jp": "『Finite Samsara』の視線追跡（gaze-tracking）インタラクティブシステムを擬似環境下で検証完了。"
+    }
+  },
+  {
+    "id": "3",
+    "timestamp": "2026-07-04",
+    "tag": {
+      "en": "CAPACITY",
+      "jp": "受け入れ枠"
+    },
+    "text": {
+      "en": "Opening selective pipeline capacity for atmospheric design and console porting co-development.",
+      "jp": "雰囲気重視のデザインおよびコンソール移植共同開発向けに、限定的な制作キャパシティを解放中。"
+    }
+  }
+]
