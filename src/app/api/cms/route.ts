@@ -30,6 +30,72 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: `${type} config saved successfully.` });
     } catch (fsError: any) {
       console.warn('Writing to local filesystem failed:', fsError.message);
+
+      // Check if GitHub Integration credentials exist
+      const githubToken = process.env.GITHUB_TOKEN;
+      const githubOwner = process.env.GITHUB_OWNER;
+      const githubRepo = process.env.GITHUB_REPO;
+
+      if (githubToken && githubOwner && githubRepo) {
+        try {
+          const targetPath = `public/data/${fileName}`;
+          const getUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${targetPath}`;
+          
+          // 1. Fetch existing file to extract SHA
+          const getRes = await fetch(getUrl, {
+            headers: {
+              'Authorization': `Bearer ${githubToken}`,
+              'Accept': 'application/vnd.github.v3+json',
+              'User-Agent': 'Abyss-CMS'
+            }
+          });
+          
+          let sha = "";
+          if (getRes.ok) {
+            const fileData = await getRes.json();
+            sha = fileData.sha;
+          }
+          
+          // 2. Commit the base64-encoded JSON update
+          const fileContent = JSON.stringify(data, null, 2);
+          const base64Content = Buffer.from(fileContent).toString('base64');
+          
+          const putRes = await fetch(getUrl, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${githubToken}`,
+              'Accept': 'application/vnd.github.v3+json',
+              'Content-Type': 'application/json',
+              'User-Agent': 'Abyss-CMS'
+            },
+            body: JSON.stringify({
+              message: `cms: update ${fileName} database`,
+              content: base64Content,
+              sha: sha || undefined
+            })
+          });
+          
+          if (putRes.ok) {
+            return NextResponse.json({ 
+              success: true, 
+              isGitHubSaved: true,
+              message: `GitHub repository updated successfully. Vercel rebuild triggered.` 
+            });
+          } else {
+            const errData = await putRes.json();
+            throw new Error(errData.message || "Failed to write commit to GitHub");
+          }
+        } catch (ghError: any) {
+          console.error('GitHub API update failed:', ghError.message);
+          return NextResponse.json({ 
+            success: false, 
+            message: `GitHub Sync Failure: ${ghError.message}. Falling back to manual download.`, 
+            isServerless: true 
+          });
+        }
+      }
+
+      // No credentials -> Fall back to manual JSON file download trigger
       return NextResponse.json({ 
         success: false, 
         message: 'Direct writing to the server filesystem is not supported on this platform. Use the download tool to update.', 

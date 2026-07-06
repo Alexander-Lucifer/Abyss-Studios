@@ -348,8 +348,12 @@ export default function Home() {
         if (type === "logs") {
           setLogs(editLogs);
         }
-        setSuccessMessage(`COMPILATION SUCCESSFUL. ${type.toUpperCase()} DATABASE UPDATED.`);
-        setTimeout(() => setSuccessMessage(""), 4000);
+        if (resData.isGitHubSaved) {
+          setSuccessMessage(`CMS RECONSTITUTION INITIATED. CONFIG COMMITTED TO REPOSITORY. PRODUCTION REDEPLOYMENT TRIGGERED.`);
+        } else {
+          setSuccessMessage(`COMPILATION SUCCESSFUL. ${type.toUpperCase()} DATABASE UPDATED.`);
+        }
+        setTimeout(() => setSuccessMessage(""), 6000);
       } else if (resData.isServerless) {
         setServerlessSaveError(true);
       } else {
