@@ -4,11 +4,17 @@
     "timestamp": "2026-07-06",
     "tag": {
       "en": "RELEASED",
-      "jp": "配信中"
+      "jp": "配信中",
+      "zh": "已发布",
+      "ko": "출시됨",
+      "hi": "जारी किया गया"
     },
     "text": {
       "en": "Mansion of Chaos performance update went live. Optimized occlusion culling, improving stability by 25%.",
-      "jp": "『Mansion of Chaos』のパフォーマンスアップデートをリリース。オクルージョンカリングを最適化し、安定性が25%向上。"
+      "jp": "『Mansion of Chaos』のパフォーマンスアップデートをリリース。オクルージョンカリングを最適化し、安定性が25%向上。",
+      "zh": "《Mansion of Chaos》性能更新已上线。优化了遮挡剔除，稳定性提升 25%。",
+      "ko": "Mansion of Chaos 성능 업데이트가 적용되었습니다. 오클루전 컬링을 최적화하여 안정성이 25% 향상되었습니다.",
+      "hi": "मैन्शन ऑफ कैओस का प्रदर्शन अपडेट लाइव हो गया है। ऑक्लूजन कलिंग को अनुकूलित किया गया, जिससे स्थिरता 25% बेहतर हुई।"
     }
   },
   {
@@ -16,11 +22,17 @@
     "timestamp": "2026-07-05",
     "tag": {
       "en": "MILESTONE",
-      "jp": "マイルストーン"
+      "jp": "マイルストーン",
+      "zh": "里程碑",
+      "ko": "마일스톤",
+      "hi": "मील का पत्थर"
     },
     "text": {
       "en": "Finite Samsara interactive gaze-tracking systems verified under mock telemetry environments.",
-      "jp": "『Finite Samsara』の視線追跡（gaze-tracking）インタラクティブシステムを擬似環境下で検証完了。"
+      "jp": "『Finite Samsara』の視線追跡（gaze-tracking）インタラクティブシステムを擬似環境下で検証完了。",
+      "zh": "《Finite Samsara》交互式视线追踪系统在模拟遥测环境下通过验证。",
+      "ko": "Finite Samsara 대화형 시선 추적 시스템이 모의 텔레메트리 환경에서 검증되었습니다.",
+      "hi": "फाइनाइट संसार इंटरैक्टिव गेज़-ट्रैकिंग सिस्टम को मॉक टेलीमेट्री वातावरण के तहत सत्यापित किया गया।"
     }
   },
   {
@@ -28,11 +40,17 @@
     "timestamp": "2026-07-04",
     "tag": {
       "en": "CAPACITY",
-      "jp": "受け入れ枠"
+      "jp": "受け入れ枠",
+      "zh": "合作容量",
+      "ko": "프로젝트 수용량",
+      "hi": "क्षमता"
     },
     "text": {
       "en": "Opening selective pipeline capacity for atmospheric design and console porting co-development.",
-      "jp": "雰囲気重視のデザインおよびコンソール移植共同開発向けに、限定的な制作キャパシティを解放中。"
+      "jp": "雰囲気重視のデザインおよびコンソール移植共同開発向けに、限定的な制作キャパシティを解放中。",
+      "zh": "开放部分管道容量，用于氛围设计 and 主机移植的联合开发。",
+      "ko": "분위기 디자인 및 콘솔 포팅 공동 개발을 위한 선택적 파이프라인 수용량 개방.",
+      "hi": "वायुमंडलीय डिज़ाइन और कंसोल पोर्टिंग सह-विकास के लिए चयनात्मक पाइपलाइन क्षमता खोलना।"
     }
   }
 ]

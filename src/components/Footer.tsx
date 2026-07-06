@@ -19,7 +19,7 @@ export default function Footer({ handleNavClick: _handleNavClick }: FooterProps)
             <div>
               <Image src="/images/newLogo.svg" alt="ABYSS STUDIOS" width={170} height={60} unoptimized={true} />
               <p className="mt-4 text-sm text-white/70">
-                Fiction-first game studio crafting atmospheric worlds with a dark crimson signature.
+                Delusions to Destinies. Engineering Worlds. Crafting Experiences.
               </p>
             </div>
 

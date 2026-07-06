@@ -10,7 +10,7 @@ import { useParams } from "next/navigation";
 export default function TeamPage() {
   const t = useTranslations('AboutTeam');
   const params = useParams();
-  const locale = (params?.locale as "en" | "jp") || "en";
+  const locale = (params?.locale as "en" | "jp" | "zh" | "ko" | "hi") || "en";
 
   const [teamList, setTeamList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

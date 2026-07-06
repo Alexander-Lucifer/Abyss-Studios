@@ -23,7 +23,7 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLocaleChange = (newLocale: 'en' | 'jp') => {
+  const handleLocaleChange = (newLocale: 'en' | 'jp' | 'zh' | 'ko' | 'hi') => {
     router.replace(pathname, { locale: newLocale });
   };
 
@@ -104,24 +104,27 @@ export default function Navbar() {
             {/* Language Switcher Dropdown */}
             <div className="relative group py-2">
               <button className="text-xs font-semibold uppercase tracking-wider text-white/80 hover:text-[#ff6b8a] flex items-center gap-1.5 border-l border-white/20 pl-4 h-5">
-                {locale === 'en' ? 'EN' : 'JP'}
+                {locale.toUpperCase()}
                 <svg className="w-3 h-3 transition-transform duration-300 group-hover:rotate-180 text-white/60 group-hover:text-[#ff6b8a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className="absolute top-full right-0 mt-1.5 w-28 bg-black/90 backdrop-blur-xl border border-white/10 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 py-1.5 z-50 shadow-[0_12px_30px_rgba(0,0,0,0.6)]">
-                <button
-                  onClick={() => handleLocaleChange('en')}
-                  className={`w-full text-left block px-4 py-2 text-xs uppercase tracking-widest hover:text-[#ff6b8a] hover:bg-white/5 transition-colors ${locale === 'en' ? 'text-[#ff6b8a] font-bold' : 'text-white/70'}`}
-                >
-                  English
-                </button>
-                <button
-                  onClick={() => handleLocaleChange('jp')}
-                  className={`w-full text-left block px-4 py-2 text-xs uppercase tracking-widest hover:text-[#ff6b8a] hover:bg-white/5 transition-colors ${locale === 'jp' ? 'text-[#ff6b8a] font-bold' : 'text-white/70'}`}
-                >
-                  日本語
-                </button>
+              <div className="absolute top-full right-0 mt-1.5 w-32 bg-black/90 backdrop-blur-xl border border-white/10 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 py-1.5 z-50 shadow-[0_12px_30px_rgba(0,0,0,0.6)]">
+                {[
+                  { code: 'en', name: 'English' },
+                  { code: 'jp', name: '日本語' },
+                  { code: 'zh', name: '简体中文' },
+                  { code: 'ko', name: '한국어' },
+                  { code: 'hi', name: 'हिन्दी' }
+                ].map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => handleLocaleChange(lang.code as any)}
+                    className={`w-full text-left block px-4 py-2 text-xs uppercase tracking-widest hover:text-[#ff6b8a] hover:bg-white/5 transition-colors ${locale === lang.code ? 'text-[#ff6b8a] font-bold' : 'text-white/70'}`}
+                  >
+                    {lang.name}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -160,19 +163,22 @@ export default function Navbar() {
             ))}
             
             {/* Mobile Language Switcher */}
-            <div className="flex gap-4 border-t border-white/10 mt-3 pt-3 px-4 text-sm font-semibold tracking-wider text-white/50">
-              <button 
-                onClick={() => { handleLocaleChange('en'); setIsOpen(false); }} 
-                className={`hover:text-white transition-colors uppercase ${locale === 'en' ? 'text-[#ff6b8a]' : ''}`}
-              >
-                English
-              </button>
-              <button 
-                onClick={() => { handleLocaleChange('jp'); setIsOpen(false); }} 
-                className={`hover:text-white transition-colors uppercase ${locale === 'jp' ? 'text-[#ff6b8a]' : ''}`}
-              >
-                日本語
-              </button>
+            <div className="flex flex-wrap gap-4 border-t border-white/10 mt-3 pt-3 px-4 text-sm font-semibold tracking-wider text-white/50">
+              {[
+                { code: 'en', name: 'English' },
+                { code: 'jp', name: '日本語' },
+                { code: 'zh', name: '简体中文' },
+                { code: 'ko', name: '한국어' },
+                { code: 'hi', name: 'हिन्दी' }
+              ].map((lang) => (
+                <button 
+                  key={lang.code}
+                  onClick={() => { handleLocaleChange(lang.code as any); setIsOpen(false); }} 
+                  className={`hover:text-white transition-colors uppercase ${locale === lang.code ? 'text-[#ff6b8a]' : ''}`}
+                >
+                  {lang.name}
+                </button>
+              ))}
             </div>
           </div>
         </div>

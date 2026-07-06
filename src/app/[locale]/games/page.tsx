@@ -12,7 +12,7 @@ const filters = ["All", "Puzzle", "Thriller", "Platformer", "RPG", "Jam"];
 export default function GamesPage() {
   const t = useTranslations('Games');
   const params = useParams();
-  const locale = (params?.locale as "en" | "jp") || "en";
+  const locale = (params?.locale as "en" | "jp" | "zh" | "ko" | "hi") || "en";
 
   const [gamesList, setGamesList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

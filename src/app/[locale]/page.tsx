@@ -11,7 +11,7 @@ export default function Home() {
   const [showIntro, setShowIntro] = useState(true);
   const t = useTranslations('Home');
   const params = useParams();
-  const locale = (params?.locale as "en" | "jp") || "en";
+  const locale = (params?.locale as "en" | "jp" | "zh" | "ko" | "hi") || "en";
 
   // Carousel State & Effect
   const [carouselSlides, setCarouselSlides] = useState<any[]>([]);
@@ -101,7 +101,14 @@ export default function Home() {
   useEffect(() => {
     const updateClock = () => {
       const now = new Date();
-      const timeStr = now.toLocaleTimeString(locale === 'jp' ? 'ja-JP' : 'en-US', { hour12: false });
+      const timeLocales: Record<string, string> = {
+        en: 'en-US',
+        jp: 'ja-JP',
+        zh: 'zh-CN',
+        ko: 'ko-KR',
+        hi: 'hi-IN'
+      };
+      const timeStr = now.toLocaleTimeString(timeLocales[locale] || 'en-US', { hour12: false });
       setCurrentTime(timeStr);
     };
     updateClock();
@@ -393,11 +400,18 @@ export default function Home() {
     downloadAnchor.remove();
   };
 
-  // Translate English to Japanese using public Google Translate API
-  const translateText = async (text: string): Promise<string> => {
+  // Translate English to other languages using public Google Translate API
+  const translateText = async (text: string, tl: string): Promise<string> => {
     if (!text.trim()) return "";
     try {
-      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ja&dt=t&q=${encodeURIComponent(text)}`;
+      const apiLocales: Record<string, string> = {
+        jp: 'ja',
+        zh: 'zh-CN',
+        ko: 'ko',
+        hi: 'hi'
+      };
+      const targetLocale = apiLocales[tl] || tl;
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLocale}&dt=t&q=${encodeURIComponent(text)}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error("Translation request failed");
       const data = await res.json();
@@ -405,7 +419,7 @@ export default function Home() {
         return data[0].map((x: any) => x[0]).join('');
       }
     } catch (err: any) {
-      console.warn("Auto-translation offline fallback:", err.message || err);
+      console.warn(`Auto-translation to ${tl} offline fallback:`, err.message || err);
     }
     return "";
   };
@@ -750,11 +764,11 @@ export default function Home() {
                         className="flex gap-4 items-start border-b border-white/5 pb-4 last:border-0 last:pb-0 font-mono text-xs group"
                       >
                         <span className={`shrink-0 px-2 py-0.5 rounded text-[9px] uppercase font-bold tracking-wider transition-all duration-300 ${getTagStyle(log.tag?.en || "")}`}>
-                          {locale === 'jp' ? log.tag?.jp : log.tag?.en}
+                          {log.tag?.[locale] || log.tag?.en}
                         </span>
                         <div className="space-y-1">
                           <p className="text-white/80 leading-relaxed font-light group-hover:text-white transition-colors duration-300">
-                            {locale === 'jp' ? log.text?.jp : log.text?.en}
+                            {log.text?.[locale] || log.text?.en}
                           </p>
                           <span className="text-[9px] text-white/30 block font-light select-none">
                             DATE: {log.timestamp}
@@ -981,16 +995,31 @@ export default function Home() {
                             const updated = [...editLogs];
                             const val = e.target.value;
                             updated[index].tag.en = val;
-                            if (val === "RELEASED") updated[index].tag.jp = "配信中";
-                            if (val === "MILESTONE") updated[index].tag.jp = "マイルストーン";
-                            if (val === "CAPACITY") updated[index].tag.jp = "受け入れ枠";
+                            if (val === "RELEASED") {
+                              updated[index].tag.jp = "配信中";
+                              updated[index].tag.zh = "已发布";
+                              updated[index].tag.ko = "출시됨";
+                              updated[index].tag.hi = "जारी किया गया";
+                            }
+                            if (val === "MILESTONE") {
+                              updated[index].tag.jp = "マイルストーン";
+                              updated[index].tag.zh = "里程碑";
+                              updated[index].tag.ko = "마일스톤";
+                              updated[index].tag.hi = "मील का पत्थर";
+                            }
+                            if (val === "CAPACITY") {
+                              updated[index].tag.jp = "受け入れ枠";
+                              updated[index].tag.zh = "合作容量";
+                              updated[index].tag.ko = "프로젝트 수용량";
+                              updated[index].tag.hi = "क्षमता";
+                            }
                             setEditLogs(updated);
                           }}
                           className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white"
                         >
-                          <option value="RELEASED">RELEASED (配信中)</option>
-                          <option value="MILESTONE">MILESTONE (マイルストーン)</option>
-                          <option value="CAPACITY">CAPACITY (受け入れ枠)</option>
+                          <option value="RELEASED">RELEASED (已发布 / 配信中)</option>
+                          <option value="MILESTONE">MILESTONE (里程碑 / 마일스톤)</option>
+                          <option value="CAPACITY">CAPACITY (合作容量 / 프로젝트 수용량)</option>
                         </select>
                       </div>
 
@@ -1018,18 +1047,25 @@ export default function Home() {
                                 if (!log.text?.en) return;
                                 const btn = document.getElementById(`translate-btn-${log.id}`);
                                 if (btn) btn.innerText = "TRANSLATING...";
-                                const translated = await translateText(log.text.en);
-                                if (translated) {
-                                  const updated = [...editLogs];
-                                  updated[index].text.jp = translated;
-                                  setEditLogs(updated);
-                                }
-                                if (btn) btn.innerText = "[ ⚡ AUTO-TRANSLATE ]";
+                                
+                                const targets = ['jp', 'zh', 'ko', 'hi'];
+                                const updated = [...editLogs];
+                                if (!updated[index].text) updated[index].text = {};
+                                
+                                await Promise.all(targets.map(async (tl) => {
+                                  const trans = await translateText(log.text.en, tl);
+                                  if (trans) {
+                                    updated[index].text[tl] = trans;
+                                  }
+                                }));
+                                
+                                setEditLogs(updated);
+                                if (btn) btn.innerText = "[ ⚡ AUTO-TRANSLATE ALL ]";
                               }}
                               id={`translate-btn-${log.id}`}
                               className="text-[9px] text-[#ff7f9a] hover:underline font-mono"
                             >
-                              [ ⚡ AUTO-TRANSLATE ]
+                              [ ⚡ AUTO-TRANSLATE ALL ]
                             </button>
                           </div>
                           <input
@@ -1038,6 +1074,48 @@ export default function Home() {
                             onChange={(e) => {
                               const updated = [...editLogs];
                               updated[index].text.jp = e.target.value;
+                              setEditLogs(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">TEXT (CHINESE SIMPLIFIED / 简体中文)</label>
+                          <input
+                            type="text"
+                            value={log.text?.zh || ""}
+                            onChange={(e) => {
+                              const updated = [...editLogs];
+                              updated[index].text.zh = e.target.value;
+                              setEditLogs(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">TEXT (KOREAN / 한국어)</label>
+                          <input
+                            type="text"
+                            value={log.text?.ko || ""}
+                            onChange={(e) => {
+                              const updated = [...editLogs];
+                              updated[index].text.ko = e.target.value;
+                              setEditLogs(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">TEXT (HINDI / हिन्दी)</label>
+                          <input
+                            type="text"
+                            value={log.text?.hi || ""}
+                            onChange={(e) => {
+                              const updated = [...editLogs];
+                              updated[index].text.hi = e.target.value;
                               setEditLogs(updated);
                             }}
                             className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
@@ -1189,83 +1267,186 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="space-y-1">
-                        <label className="text-[10px] text-white/40">BRIEF DESCRIPTION (EN)</label>
-                        <textarea
-                          rows={2}
-                          value={game.brief?.en || ""}
-                          onChange={(e) => {
-                            const updated = [...editGames];
-                            if (!updated[index].brief) updated[index].brief = {};
-                            updated[index].brief.en = e.target.value;
-                            setEditGames(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <div className="flex justify-between items-center">
-                          <label className="text-[10px] text-white/40">BRIEF DESCRIPTION (JP)</label>
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              if (!game.brief?.en) return;
-                              const translated = await translateText(game.brief.en);
-                              if (translated) {
+                    <div className="space-y-3">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">BRIEF DESCRIPTION (EN)</label>
+                          <textarea
+                            rows={2}
+                            value={game.brief?.en || ""}
+                            onChange={(e) => {
+                              const updated = [...editGames];
+                              if (!updated[index].brief) updated[index].brief = {};
+                              updated[index].brief.en = e.target.value;
+                              setEditGames(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center">
+                            <label className="text-[10px] text-white/40">BRIEF DESCRIPTION (JP)</label>
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (!game.brief?.en) return;
+                                const targets = ['jp', 'zh', 'ko', 'hi'];
                                 const updated = [...editGames];
                                 if (!updated[index].brief) updated[index].brief = {};
-                                updated[index].brief.jp = translated;
+                                if (!updated[index].features) updated[index].features = {};
+                                
+                                await Promise.all(targets.map(async (tl) => {
+                                  const transBrief = await translateText(game.brief.en, tl);
+                                  if (transBrief) updated[index].brief[tl] = transBrief;
+                                  
+                                  if (game.features?.en && game.features.en.length > 0) {
+                                    const transFeatures = await Promise.all(
+                                      game.features.en.map((f: string) => translateText(f, tl))
+                                    );
+                                    updated[index].features[tl] = transFeatures.filter(Boolean);
+                                  }
+                                }));
+                                
                                 setEditGames(updated);
-                              }
+                              }}
+                              className="text-[9px] text-[#ff7f9a] hover:underline"
+                            >
+                              [ ⚡ AUTO-TRANSLATE ALL ]
+                            </button>
+                          </div>
+                          <textarea
+                            rows={2}
+                            value={game.brief?.jp || ""}
+                            onChange={(e) => {
+                              const updated = [...editGames];
+                              if (!updated[index].brief) updated[index].brief = {};
+                              updated[index].brief.jp = e.target.value;
+                              setEditGames(updated);
                             }}
-                            className="text-[9px] text-[#ff7f9a] hover:underline"
-                          >
-                            [ ⚡ AUTO-TRANSLATE ]
-                          </button>
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
                         </div>
-                        <textarea
-                          rows={2}
-                          value={game.brief?.jp || ""}
-                          onChange={(e) => {
-                            const updated = [...editGames];
-                            if (!updated[index].brief) updated[index].brief = {};
-                            updated[index].brief.jp = e.target.value;
-                            setEditGames(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
-                        />
+                      </div>
+                      <div className="grid gap-4 md:grid-cols-3">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">BRIEF DESCRIPTION (ZH / 简体中文)</label>
+                          <textarea
+                            rows={2}
+                            value={game.brief?.zh || ""}
+                            onChange={(e) => {
+                              const updated = [...editGames];
+                              if (!updated[index].brief) updated[index].brief = {};
+                              updated[index].brief.zh = e.target.value;
+                              setEditGames(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">BRIEF DESCRIPTION (KO / 한국어)</label>
+                          <textarea
+                            rows={2}
+                            value={game.brief?.ko || ""}
+                            onChange={(e) => {
+                              const updated = [...editGames];
+                              if (!updated[index].brief) updated[index].brief = {};
+                              updated[index].brief.ko = e.target.value;
+                              setEditGames(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">BRIEF DESCRIPTION (HI / हिन्दी)</label>
+                          <textarea
+                            rows={2}
+                            value={game.brief?.hi || ""}
+                            onChange={(e) => {
+                              const updated = [...editGames];
+                              if (!updated[index].brief) updated[index].brief = {};
+                              updated[index].brief.hi = e.target.value;
+                              setEditGames(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
                       </div>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="space-y-1">
-                        <label className="text-[10px] text-white/40">CORE PLAYABLE PILLARS (EN, ONE PER LINE)</label>
-                        <textarea
-                          rows={3}
-                          value={game.features?.en?.join("\n") || ""}
-                          onChange={(e) => {
-                            const updated = [...editGames];
-                            if (!updated[index].features) updated[index].features = {};
-                            updated[index].features.en = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
-                            setEditGames(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-[11px]"
-                        />
+                    <div className="space-y-3">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">CORE PLAYABLE PILLARS (EN, ONE PER LINE)</label>
+                          <textarea
+                            rows={3}
+                            value={game.features?.en?.join("\n") || ""}
+                            onChange={(e) => {
+                              const updated = [...editGames];
+                              if (!updated[index].features) updated[index].features = {};
+                              updated[index].features.en = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
+                              setEditGames(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-[11px]"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">CORE PLAYABLE PILLARS (JP, ONE PER LINE)</label>
+                          <textarea
+                            rows={3}
+                            value={game.features?.jp?.join("\n") || ""}
+                            onChange={(e) => {
+                              const updated = [...editGames];
+                              if (!updated[index].features) updated[index].features = {};
+                              updated[index].features.jp = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
+                              setEditGames(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-[11px]"
+                          />
+                        </div>
                       </div>
-                      <div className="space-y-1">
-                        <label className="text-[10px] text-white/40">CORE PLAYABLE PILLARS (JP, ONE PER LINE)</label>
-                        <textarea
-                          rows={3}
-                          value={game.features?.jp?.join("\n") || ""}
-                          onChange={(e) => {
-                            const updated = [...editGames];
-                            if (!updated[index].features) updated[index].features = {};
-                            updated[index].features.jp = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
-                            setEditGames(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-[11px]"
-                        />
+                      <div className="grid gap-4 md:grid-cols-3">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">CORE PLAYABLE PILLARS (ZH / 简体中文, ONE PER LINE)</label>
+                          <textarea
+                            rows={3}
+                            value={game.features?.zh?.join("\n") || ""}
+                            onChange={(e) => {
+                              const updated = [...editGames];
+                              if (!updated[index].features) updated[index].features = {};
+                              updated[index].features.zh = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
+                              setEditGames(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-[11px]"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">CORE PLAYABLE PILLARS (KO / 한국어, ONE PER LINE)</label>
+                          <textarea
+                            rows={3}
+                            value={game.features?.ko?.join("\n") || ""}
+                            onChange={(e) => {
+                              const updated = [...editGames];
+                              if (!updated[index].features) updated[index].features = {};
+                              updated[index].features.ko = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
+                              setEditGames(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-[11px]"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">CORE PLAYABLE PILLARS (HI / हिन्दी, ONE PER LINE)</label>
+                          <textarea
+                            rows={3}
+                            value={game.features?.hi?.join("\n") || ""}
+                            onChange={(e) => {
+                              const updated = [...editGames];
+                              if (!updated[index].features) updated[index].features = {};
+                              updated[index].features.hi = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
+                              setEditGames(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-[11px]"
+                          />
+                        </div>
                       </div>
                     </div>
 
@@ -1431,101 +1612,195 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="space-y-1">
-                        <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">ROLE (EN)</label>
-                        <input
-                          type="text"
-                          value={member.role?.en || ""}
-                          onChange={(e) => {
-                            const updated = [...editTeam];
-                            if (!updated[index].role) updated[index].role = {};
-                            updated[index].role.en = e.target.value;
-                            setEditTeam(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <div className="flex justify-between items-center">
-                          <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">ROLE (JP)</label>
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              if (!member.role?.en) return;
-                              const translated = await translateText(member.role.en);
-                              if (translated) {
+                    <div className="space-y-3">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">ROLE (EN)</label>
+                          <input
+                            type="text"
+                            value={member.role?.en || ""}
+                            onChange={(e) => {
+                              const updated = [...editTeam];
+                              if (!updated[index].role) updated[index].role = {};
+                              updated[index].role.en = e.target.value;
+                              setEditTeam(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center">
+                            <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">ROLE (JP)</label>
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (!member.role?.en) return;
+                                const targets = ['jp', 'zh', 'ko', 'hi'];
                                 const updated = [...editTeam];
                                 if (!updated[index].role) updated[index].role = {};
-                                updated[index].role.jp = translated;
+                                await Promise.all(targets.map(async (tl) => {
+                                  const trans = await translateText(member.role.en, tl);
+                                  if (trans) updated[index].role[tl] = trans;
+                                }));
                                 setEditTeam(updated);
-                              }
+                              }}
+                              className="text-[9px] text-[#ff7f9a] hover:underline"
+                            >
+                              [ ⚡ AUTO-TRANSLATE ALL ]
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={member.role?.jp || ""}
+                            onChange={(e) => {
+                              const updated = [...editTeam];
+                              if (!updated[index].role) updated[index].role = {};
+                              updated[index].role.jp = e.target.value;
+                              setEditTeam(updated);
                             }}
-                            className="text-[9px] text-[#ff7f9a] hover:underline"
-                          >
-                            [ ⚡ AUTO-TRANSLATE ]
-                          </button>
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
                         </div>
-                        <input
-                          type="text"
-                          value={member.role?.jp || ""}
-                          onChange={(e) => {
-                            const updated = [...editTeam];
-                            if (!updated[index].role) updated[index].role = {};
-                            updated[index].role.jp = e.target.value;
-                            setEditTeam(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
-                        />
+                      </div>
+                      <div className="grid gap-4 md:grid-cols-3">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">ROLE (ZH / 简体中文)</label>
+                          <input
+                            type="text"
+                            value={member.role?.zh || ""}
+                            onChange={(e) => {
+                              const updated = [...editTeam];
+                              if (!updated[index].role) updated[index].role = {};
+                              updated[index].role.zh = e.target.value;
+                              setEditTeam(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">ROLE (KO / 한국어)</label>
+                          <input
+                            type="text"
+                            value={member.role?.ko || ""}
+                            onChange={(e) => {
+                              const updated = [...editTeam];
+                              if (!updated[index].role) updated[index].role = {};
+                              updated[index].role.ko = e.target.value;
+                              setEditTeam(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">ROLE (HI / हिन्दी)</label>
+                          <input
+                            type="text"
+                            value={member.role?.hi || ""}
+                            onChange={(e) => {
+                              const updated = [...editTeam];
+                              if (!updated[index].role) updated[index].role = {};
+                              updated[index].role.hi = e.target.value;
+                              setEditTeam(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
                       </div>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="space-y-1">
-                        <label className="text-[10px] text-white/40">BIO OVERVIEW (EN)</label>
-                        <textarea
-                          rows={2}
-                          value={member.bio?.en || ""}
-                          onChange={(e) => {
-                            const updated = [...editTeam];
-                            if (!updated[index].bio) updated[index].bio = {};
-                            updated[index].bio.en = e.target.value;
-                            setEditTeam(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <div className="flex justify-between items-center">
-                          <label className="text-[10px] text-white/40">BIO OVERVIEW (JP)</label>
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              if (!member.bio?.en) return;
-                              const translated = await translateText(member.bio.en);
-                              if (translated) {
+                    <div className="space-y-3">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">BIO OVERVIEW (EN)</label>
+                          <textarea
+                            rows={2}
+                            value={member.bio?.en || ""}
+                            onChange={(e) => {
+                              const updated = [...editTeam];
+                              if (!updated[index].bio) updated[index].bio = {};
+                              updated[index].bio.en = e.target.value;
+                              setEditTeam(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center">
+                            <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">BIO OVERVIEW (JP)</label>
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (!member.bio?.en) return;
+                                const targets = ['jp', 'zh', 'ko', 'hi'];
                                 const updated = [...editTeam];
                                 if (!updated[index].bio) updated[index].bio = {};
-                                updated[index].bio.jp = translated;
+                                await Promise.all(targets.map(async (tl) => {
+                                  const trans = await translateText(member.bio.en, tl);
+                                  if (trans) updated[index].bio[tl] = trans;
+                                }));
                                 setEditTeam(updated);
-                              }
+                              }}
+                              className="text-[9px] text-[#ff7f9a] hover:underline"
+                            >
+                              [ ⚡ AUTO-TRANSLATE ALL ]
+                            </button>
+                          </div>
+                          <textarea
+                            rows={2}
+                            value={member.bio?.jp || ""}
+                            onChange={(e) => {
+                              const updated = [...editTeam];
+                              if (!updated[index].bio) updated[index].bio = {};
+                              updated[index].bio.jp = e.target.value;
+                              setEditTeam(updated);
                             }}
-                            className="text-[9px] text-[#ff7f9a] hover:underline"
-                          >
-                            [ ⚡ AUTO-TRANSLATE ]
-                          </button>
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
                         </div>
-                        <textarea
-                          rows={2}
-                          value={member.bio?.jp || ""}
-                          onChange={(e) => {
-                            const updated = [...editTeam];
-                            if (!updated[index].bio) updated[index].bio = {};
-                            updated[index].bio.jp = e.target.value;
-                            setEditTeam(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
-                        />
+                      </div>
+                      <div className="grid gap-4 md:grid-cols-3">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">BIO OVERVIEW (ZH / 简体中文)</label>
+                          <textarea
+                            rows={2}
+                            value={member.bio?.zh || ""}
+                            onChange={(e) => {
+                              const updated = [...editTeam];
+                              if (!updated[index].bio) updated[index].bio = {};
+                              updated[index].bio.zh = e.target.value;
+                              setEditTeam(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">BIO OVERVIEW (KO / 한국어)</label>
+                          <textarea
+                            rows={2}
+                            value={member.bio?.ko || ""}
+                            onChange={(e) => {
+                              const updated = [...editTeam];
+                              if (!updated[index].bio) updated[index].bio = {};
+                              updated[index].bio.ko = e.target.value;
+                              setEditTeam(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">BIO OVERVIEW (HI / हिन्दी)</label>
+                          <textarea
+                            rows={2}
+                            value={member.bio?.hi || ""}
+                            onChange={(e) => {
+                              const updated = [...editTeam];
+                              if (!updated[index].bio) updated[index].bio = {};
+                              updated[index].bio.hi = e.target.value;
+                              setEditTeam(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
                       </div>
                     </div>
 
@@ -1657,132 +1932,282 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="space-y-1">
-                        <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">SERVICE TITLE (EN)</label>
-                        <input
-                          type="text"
-                          value={service.title?.en || ""}
-                          onChange={(e) => {
-                            const updated = [...editServices];
-                            if (!updated[index].title) updated[index].title = {};
-                            updated[index].title.en = e.target.value;
-                            setEditServices(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <div className="flex justify-between items-center">
-                          <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">SERVICE TITLE (JP)</label>
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              if (!service.title?.en) return;
-                              const translated = await translateText(service.title.en);
-                              if (translated) {
+                    <div className="space-y-3">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">SERVICE TITLE (EN)</label>
+                          <input
+                            type="text"
+                            value={service.title?.en || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].title) updated[index].title = {};
+                              updated[index].title.en = e.target.value;
+                              setEditServices(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center">
+                            <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">SERVICE TITLE (JP)</label>
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (!service.title?.en) return;
+                                const targets = ['jp', 'zh', 'ko', 'hi'];
                                 const updated = [...editServices];
                                 if (!updated[index].title) updated[index].title = {};
-                                updated[index].title.jp = translated;
+                                await Promise.all(targets.map(async (tl) => {
+                                  const trans = await translateText(service.title.en, tl);
+                                  if (trans) updated[index].title[tl] = trans;
+                                }));
                                 setEditServices(updated);
-                              }
+                              }}
+                              className="text-[9px] text-[#ff7f9a] hover:underline"
+                            >
+                              [ ⚡ AUTO-TRANSLATE ALL ]
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={service.title?.jp || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].title) updated[index].title = {};
+                              updated[index].title.jp = e.target.value;
+                              setEditServices(updated);
                             }}
-                            className="text-[9px] text-[#ff7f9a] hover:underline"
-                          >
-                            [ ⚡ AUTO-TRANSLATE ]
-                          </button>
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
                         </div>
-                        <input
-                          type="text"
-                          value={service.title?.jp || ""}
-                          onChange={(e) => {
-                            const updated = [...editServices];
-                            if (!updated[index].title) updated[index].title = {};
-                            updated[index].title.jp = e.target.value;
-                            setEditServices(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
-                        />
+                      </div>
+                      <div className="grid gap-4 md:grid-cols-3">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">SERVICE TITLE (ZH / 简体中文)</label>
+                          <input
+                            type="text"
+                            value={service.title?.zh || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].title) updated[index].title = {};
+                              updated[index].title.zh = e.target.value;
+                              setEditServices(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">SERVICE TITLE (KO / 한국어)</label>
+                          <input
+                            type="text"
+                            value={service.title?.ko || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].title) updated[index].title = {};
+                              updated[index].title.ko = e.target.value;
+                              setEditServices(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">SERVICE TITLE (HI / हिन्दी)</label>
+                          <input
+                            type="text"
+                            value={service.title?.hi || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].title) updated[index].title = {};
+                              updated[index].title.hi = e.target.value;
+                              setEditServices(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
                       </div>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="space-y-1">
-                        <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">SERVICE OVERVIEW (EN)</label>
-                        <textarea
-                          rows={2}
-                          value={service.desc?.en || ""}
-                          onChange={(e) => {
-                            const updated = [...editServices];
-                            if (!updated[index].desc) updated[index].desc = {};
-                            updated[index].desc.en = e.target.value;
-                            setEditServices(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <div className="flex justify-between items-center">
-                          <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">SERVICE OVERVIEW (JP)</label>
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              if (!service.desc?.en) return;
-                              const translated = await translateText(service.desc.en);
-                              if (translated) {
+                    <div className="space-y-3">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">SERVICE OVERVIEW (EN)</label>
+                          <textarea
+                            rows={2}
+                            value={service.desc?.en || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].desc) updated[index].desc = {};
+                              updated[index].desc.en = e.target.value;
+                              setEditServices(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center">
+                            <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">SERVICE OVERVIEW (JP)</label>
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (!service.desc?.en) return;
+                                const targets = ['jp', 'zh', 'ko', 'hi'];
                                 const updated = [...editServices];
                                 if (!updated[index].desc) updated[index].desc = {};
-                                updated[index].desc.jp = translated;
+                                if (!updated[index].deliverables) updated[index].deliverables = {};
+                                
+                                await Promise.all(targets.map(async (tl) => {
+                                  const transDesc = await translateText(service.desc.en, tl);
+                                  if (transDesc) updated[index].desc[tl] = transDesc;
+                                  
+                                  if (service.deliverables?.en && service.deliverables.en.length > 0) {
+                                    const transDeliv = await Promise.all(
+                                      service.deliverables.en.map((d: string) => translateText(d, tl))
+                                    );
+                                    updated[index].deliverables[tl] = transDeliv.filter(Boolean);
+                                  }
+                                }));
+                                
                                 setEditServices(updated);
-                              }
+                              }}
+                              className="text-[9px] text-[#ff7f9a] hover:underline"
+                            >
+                              [ ⚡ AUTO-TRANSLATE ALL ]
+                            </button>
+                          </div>
+                          <textarea
+                            rows={2}
+                            value={service.desc?.jp || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].desc) updated[index].desc = {};
+                              updated[index].desc.jp = e.target.value;
+                              setEditServices(updated);
                             }}
-                            className="text-[9px] text-[#ff7f9a] hover:underline"
-                          >
-                            [ ⚡ AUTO-TRANSLATE ]
-                          </button>
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
                         </div>
-                        <textarea
-                          rows={2}
-                          value={service.desc?.jp || ""}
-                          onChange={(e) => {
-                            const updated = [...editServices];
-                            if (!updated[index].desc) updated[index].desc = {};
-                            updated[index].desc.jp = e.target.value;
-                            setEditServices(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
-                        />
+                      </div>
+                      <div className="grid gap-4 md:grid-cols-3">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">SERVICE OVERVIEW (ZH / 简体中文)</label>
+                          <textarea
+                            rows={2}
+                            value={service.desc?.zh || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].desc) updated[index].desc = {};
+                              updated[index].desc.zh = e.target.value;
+                              setEditServices(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">SERVICE OVERVIEW (KO / 한국어)</label>
+                          <textarea
+                            rows={2}
+                            value={service.desc?.ko || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].desc) updated[index].desc = {};
+                              updated[index].desc.ko = e.target.value;
+                              setEditServices(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">SERVICE OVERVIEW (HI / हिन्दी)</label>
+                          <textarea
+                            rows={2}
+                            value={service.desc?.hi || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].desc) updated[index].desc = {};
+                              updated[index].desc.hi = e.target.value;
+                              setEditServices(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans"
+                          />
+                        </div>
                       </div>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="space-y-1">
-                        <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">KEY CAPABILITIES (EN, ONE PER LINE)</label>
-                        <textarea
-                          rows={3}
-                          value={service.deliverables?.en?.join("\n") || ""}
-                          onChange={(e) => {
-                            const updated = [...editServices];
-                            if (!updated[index].deliverables) updated[index].deliverables = {};
-                            updated[index].deliverables.en = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
-                            setEditServices(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-xs"
-                        />
+                    <div className="space-y-3">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">KEY CAPABILITIES (EN, ONE PER LINE)</label>
+                          <textarea
+                            rows={3}
+                            value={service.deliverables?.en?.join("\n") || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].deliverables) updated[index].deliverables = {};
+                              updated[index].deliverables.en = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
+                              setEditServices(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-xs"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">KEY CAPABILITIES (JP, ONE PER LINE)</label>
+                          <textarea
+                            rows={3}
+                            value={service.deliverables?.jp?.join("\n") || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].deliverables) updated[index].deliverables = {};
+                              updated[index].deliverables.jp = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
+                              setEditServices(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-xs"
+                          />
+                        </div>
                       </div>
-                      <div className="space-y-1">
-                        <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider">KEY CAPABILITIES (JP, ONE PER LINE)</label>
-                        <textarea
-                          rows={3}
-                          value={service.deliverables?.jp?.join("\n") || ""}
-                          onChange={(e) => {
-                            const updated = [...editServices];
-                            if (!updated[index].deliverables) updated[index].deliverables = {};
-                            updated[index].deliverables.jp = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
-                            setEditServices(updated);
-                          }}
-                          className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-xs"
-                        />
+                      <div className="grid gap-4 md:grid-cols-3">
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">KEY CAPABILITIES (ZH / 简体中文, ONE PER LINE)</label>
+                          <textarea
+                            rows={3}
+                            value={service.deliverables?.zh?.join("\n") || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].deliverables) updated[index].deliverables = {};
+                              updated[index].deliverables.zh = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
+                              setEditServices(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-xs"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">KEY CAPABILITIES (KO / 한국어, ONE PER LINE)</label>
+                          <textarea
+                            rows={3}
+                            value={service.deliverables?.ko?.join("\n") || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].deliverables) updated[index].deliverables = {};
+                              updated[index].deliverables.ko = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
+                              setEditServices(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-xs"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] text-white/40">KEY CAPABILITIES (HI / हिन्दी, ONE PER LINE)</label>
+                          <textarea
+                            rows={3}
+                            value={service.deliverables?.hi?.join("\n") || ""}
+                            onChange={(e) => {
+                              const updated = [...editServices];
+                              if (!updated[index].deliverables) updated[index].deliverables = {};
+                              updated[index].deliverables.hi = e.target.value.split("\n").map((s: string) => s.trim()).filter(Boolean);
+                              setEditServices(updated);
+                            }}
+                            className="w-full bg-black/60 border border-white/10 rounded px-3 py-2 text-white font-sans text-xs"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
