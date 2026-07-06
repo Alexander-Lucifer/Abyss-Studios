@@ -1,5 +1,17 @@
 [
   {
+    "id": "1783345640747",
+    "timestamp": "2026-07-06",
+    "tag": {
+      "en": "MILESTONE",
+      "jp": "マイルストーン"
+    },
+    "text": {
+      "en": "Vertical Slice Development Commences for Project:Nexus",
+      "jp": "Project:Nexus の垂直スライス開発が開始"
+    }
+  },
+  {
     "id": "1783340644153",
     "timestamp": "2026-07-06",
     "tag": {
