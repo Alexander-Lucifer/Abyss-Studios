@@ -1,18 +1,30 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Footer from "@/components/Footer";
 import CountryCodeSelector from "@/components/CountryCodeSelector";
+import { useTranslations } from "next-intl";
 
 const CONTACT_EMAIL = "contactus@abyssstudios.site";
 
-const openings = [
-  "Game Designer (Systems & Narrative)",
-  "General Pitch (Creative Audition)",
-];
-
 export default function ApplyPage() {
-  const [selectedRole, setSelectedRole] = useState(openings[0]);
+  const t = useTranslations('Careers');
+  
+  const openings = [
+    t('designerTitle'),
+    t('pitchTitle'),
+  ];
+
+  const [selectedRoleIndex, setSelectedRoleIndex] = useState(0);
+  const selectedRole = openings[selectedRoleIndex];
+
+  // Sync selected role index if translation updates
+  useEffect(() => {
+    if (selectedRoleIndex >= openings.length) {
+      setSelectedRoleIndex(0);
+    }
+  }, [openings, selectedRoleIndex]);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -62,51 +74,57 @@ export default function ApplyPage() {
 
     setIsSubmitting(true);
     setResult({ type: null, message: "" });
-    
-    try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('position', selectedRole);
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('phone', formData.phone);
-      formDataToSend.append('portfolio', formData.portfolio);
-      formDataToSend.append('experience', formData.experience);
-      formDataToSend.append('message', formData.message);
-      formDataToSend.append('resume', resumeFile);
 
-      const response = await fetch('/api/sendApplication', {
-        method: 'POST',
-        body: formDataToSend,
+    try {
+      const emailFormData = new FormData();
+      emailFormData.append('name', formData.name);
+      emailFormData.append('email', formData.email);
+      emailFormData.append('phone', `${formData.countryCode} ${formData.phone}`);
+      emailFormData.append('portfolio', formData.portfolio);
+      emailFormData.append('experience', formData.experience);
+      emailFormData.append('message', formData.message);
+      emailFormData.append('role', selectedRole);
+      emailFormData.append('resume', resumeFile);
+
+      const response = await fetch("/api/sendApplication", {
+        method: "POST",
+        body: emailFormData,
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to submit application');
+        throw new Error(data.message || "Failed to submit application");
       }
-      
-      setResult({ type: "ok", message: "Application submitted successfully! We'll be in touch soon." });
-      setFormData({ name: "", email: "", phone: "", countryCode: "+91", portfolio: "", experience: "", message: "" });
+
+      setResult({ type: "ok", message: "Application submitted successfully" });
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        countryCode: "+91",
+        portfolio: "",
+        experience: "",
+        message: "",
+      });
       setResumeFile(null);
-      
       // Reset file input
       const fileInput = document.getElementById('resume-upload') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
-      
+
     } catch (error) {
-      // Check if it's a fallback scenario
-      const errorData = error instanceof Error && error.message.includes('fallback') 
-        ? { fallback: true } 
-        : {};
+      console.error('Error submitting application:', error);
       
-      if (errorData.fallback) {
-        // Create mailto link with all form data
-        const subject = encodeURIComponent(`Application for ${selectedRole}`);
+      // Check if standard submission failed to trigger mailto fallback
+      if (error instanceof Error && error.message.includes("Failed to submit")) {
+        const subject = encodeURIComponent(`Application: ${selectedRole} - ${formData.name}`);
         const body = encodeURIComponent(
-          `Position: ${selectedRole}
+`Application Details:
+
 Name: ${formData.name}
 Email: ${formData.email}
 Phone: ${formData.countryCode} ${formData.phone}
+Role: ${selectedRole}
 Portfolio: ${formData.portfolio}
 Experience: ${formData.experience}
 
@@ -138,10 +156,10 @@ Note: Resume/CV should be attached separately to this email.`
         <div className="hero-overlay"></div>
         <div className="hero-noise"></div>
         <div className="content-wrap relative z-10 text-center">
-          <span className="heading-kicker">Applications</span>
-          <h1 className="section-title text-5xl md:text-6xl">Step Into The Studio</h1>
+          <span className="heading-kicker">{t('applyKicker')}</span>
+          <h1 className="section-title text-5xl md:text-6xl">{t('applyTitle')}</h1>
           <p className="section-subtitle mx-auto max-w-3xl">
-            Choose your role, review expectations, and send your application directly.
+            {t('applySubtitle')}
           </p>
         </div>
       </section>
@@ -149,14 +167,14 @@ Note: Resume/CV should be attached separately to this email.`
       <section className="section-shell">
         <div className="content-wrap grid gap-6 lg:grid-cols-5">
           <div className="cinematic-card lg:col-span-2">
-            <h2 className="text-2xl font-bold text-white">Open Positions</h2>
+            <h2 className="text-2xl font-bold text-white">{t('openPositions')}</h2>
             <div className="mt-4 flex flex-col gap-3">
-              {openings.map((role) => (
+              {openings.map((role, idx) => (
                 <button
                   key={role}
-                  onClick={() => setSelectedRole(role)}
+                  onClick={() => setSelectedRoleIndex(idx)}
                   className={`rounded-xl border px-4 py-3 text-left transition ${
-                    selectedRole === role
+                    selectedRoleIndex === idx
                       ? "border-[#ff7f9a] bg-[#dc143c]/20 text-white"
                       : "border-[#dc143c]/25 bg-black/40 text-white/80 hover:border-[#dc143c]/45"
                   }`}
@@ -170,7 +188,7 @@ Note: Resume/CV should be attached separately to this email.`
           <form onSubmit={handleSubmit} className="cinematic-card lg:col-span-3">
             <h2 className="text-3xl font-bold text-white">{selectedRole}</h2>
             <p className="mt-3 text-white/75">
-              Fill out the form below to apply for this position. Include your portfolio/resume and a brief introduction.
+              {t('fillForm')}
             </p>
             
             {result.type && (
@@ -191,7 +209,7 @@ Note: Resume/CV should be attached separately to this email.`
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="Full Name"
+                  placeholder={t('fullName')}
                   required
                   className="rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
                 />
@@ -200,7 +218,7 @@ Note: Resume/CV should be attached separately to this email.`
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="Email Address"
+                  placeholder={t('emailAddress')}
                   required
                   className="rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
                 />
@@ -217,7 +235,7 @@ Note: Resume/CV should be attached separately to this email.`
                   type="tel"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="Phone Number"
+                  placeholder={t('phoneNumber')}
                   className="flex-1 rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
                 />
               </div>
@@ -226,7 +244,7 @@ Note: Resume/CV should be attached separately to this email.`
                 name="portfolio"
                 value={formData.portfolio}
                 onChange={handleChange}
-                placeholder="Portfolio URL"
+                placeholder={t('portfolioUrl')}
                 className="rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
               />
 
@@ -237,11 +255,11 @@ Note: Resume/CV should be attached separately to this email.`
                 required
                 className="rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
               >
-                <option value="">Select Experience Level</option>
-                <option value="Entry Level (0-2 years)">Entry Level (0-2 years)</option>
-                <option value="Mid Level (2-5 years)">Mid Level (2-5 years)</option>
-                <option value="Senior Level (5-10 years)">Senior Level (5-10 years)</option>
-                <option value="Lead/Principal (10+ years)">Lead/Principal (10+ years)</option>
+                <option value="">{t('selectExperience')}</option>
+                <option value="Junior">{t('expJunior')}</option>
+                <option value="Mid">{t('expMid')}</option>
+                <option value="Senior">{t('expSenior')}</option>
+                <option value="Student">{t('expStudent')}</option>
               </select>
 
               <textarea
@@ -249,14 +267,14 @@ Note: Resume/CV should be attached separately to this email.`
                 rows={5}
                 value={formData.message}
                 onChange={handleChange}
-                placeholder="Tell us why you're interested in this role and what makes you a great fit..."
+                placeholder={t('coverLetter')}
                 required
                 className="w-full rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
               />
 
               <div>
                 <label className="block text-sm font-medium text-white/80 mb-2">
-                  Resume/CV (PDF, DOC, DOCX - Max 5MB)
+                  {t('resumeUpload')}
                 </label>
                 <input
                   id="resume-upload"
@@ -276,7 +294,7 @@ Note: Resume/CV should be attached separately to this email.`
                 disabled={isSubmitting}
                 className="gaming-button w-full"
               >
-                {isSubmitting ? "Submitting..." : "Submit Application"}
+                {isSubmitting ? t('submitting') : t('submitApp')}
               </button>
             </div>
 

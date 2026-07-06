@@ -2,14 +2,17 @@
 
 import Image from "next/image";
 import Footer from "@/components/Footer";
-
-const timeline = [
-  { year: "2022", event: "Abyss Studios is conceived as an indie narrative experiment." },
-  { year: "2024", event: "Formal operations begin with game jams and prototypes." },
-  { year: "2025", event: "Studio expansion and flagship project pre-production." },
-];
+import { useTranslations } from "next-intl";
 
 export default function AboutPage() {
+  const t = useTranslations('About');
+
+  const timeline = [
+    { year: "2022", event: t('timeline2022') },
+    { year: "2024", event: t('timeline2024') },
+    { year: "2025", event: t('timeline2025') },
+  ];
+
   return (
     <main className="site-shell">
       {/* Hero Section */}
@@ -17,14 +20,14 @@ export default function AboutPage() {
         <div className="hero-overlay"></div>
         <div className="hero-noise"></div>
         <div className="content-wrap relative z-10 text-center">
-          <span className="heading-kicker">About</span>
+          <span className="heading-kicker">{t('heroKicker')}</span>
           <h1 className="section-title text-5xl md:text-6xl">Abyss Studios</h1>
           <p className="section-subtitle mx-auto max-w-3xl">
-            We build games as narrative environments: places players enter, feel, and remember.
+            {t('heroSubtitle')}
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a href="/about/life" className="tag">Studio Life</a>
-            <a href="/about/team" className="tag">Our Team</a>
+            <a href="/about/life" className="tag">{t('studioLife')}</a>
+            <a href="/about/team" className="tag">{t('ourTeam')}</a>
           </div>
         </div>
       </section>
@@ -33,18 +36,16 @@ export default function AboutPage() {
       <section className="section-shell">
         <div className="content-wrap grid gap-6 lg:grid-cols-2">
           <article className="cinematic-card">
-            <h2 className="text-3xl font-bold text-white">Vision</h2>
+            <h2 className="text-3xl font-bold text-white">{t('vision')}</h2>
             <p className="mt-4 text-white/75 leading-relaxed">
-              We craft emotionally resonant, fiction-first experiences where atmosphere and interactivity
-              are inseparable. Our worlds invite players to observe, interpret, and transform.
+              {t('visionText')}
             </p>
           </article>
 
           <article className="cinematic-card">
-            <h2 className="text-3xl font-bold text-white">Mission</h2>
+            <h2 className="text-3xl font-bold text-white">{t('mission')}</h2>
             <p className="mt-4 text-white/75 leading-relaxed">
-              Blend cinematic storytelling, stylized art, and experimental mechanics into games that
-              feel intimate, strange, and unforgettable.
+              {t('missionText')}
             </p>
           </article>
         </div>
@@ -60,26 +61,23 @@ export default function AboutPage() {
             {/* Left Side Typography - z-20 to ensure text scales above the portrait background watermarking on mobile */}
             <div className="relative z-20 lg:col-span-7 flex flex-col justify-center">
               <span className="heading-kicker mb-6 tracking-[0.25em] text-[#ff7f9a] text-xs uppercase font-semibold block">
-                Founder Statement
+                {t('founderKicker')}
               </span>
               
               <div className="text-white/90 font-light tracking-wide text-lg md:text-xl leading-[1.8] space-y-6 max-w-2xl">
                 <p>
-                  We are observers who build worlds from fragments of memory, fear, and wonder.
+                  {t('founderText1')}
                 </p>
                 <p>
-                  At Abyss Studios, we see games as Art, a new world born from the depths of its creator's mind.
-                  We are Creators, Architects, and Lorekeepers of these Myriad Realms; using every tool at our disposal to shape both, these realms and our own world.
-                  The Players who embark on these journeys are our heralds, pacing through our worlds and sharing their stories with the community.
+                  {t('founderText2')}
                 </p>
                 <p>
-                  We are not just creators, we are storytellers, dreamers and Crazies who will not settle for art without a soul,
-                  soul that will give life to our creations.
+                  {t('founderText3')}
                 </p>
               </div>
               
               <p className="mt-10 text-[#ff7f9a] font-medium tracking-widest text-sm uppercase">
-                — Suryanshu Mittal, Founder
+                {t('founderSig')}
               </p>
             </div>
 
@@ -98,7 +96,6 @@ export default function AboutPage() {
                   src="/images/NOBGfounder.png"
                   alt="Suryanshu Mittal - Founder"
                   fill
-                  // Swapped standard layout anchors over to fix invalid positioning keywords
                   className="object-contain object-center lg:object-right-bottom select-none transform -scale-x-100"
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   priority
@@ -113,7 +110,7 @@ export default function AboutPage() {
       {/* Timeline Section */}
       <section className="section-shell">
         <div className="content-wrap">
-          <h2 className="section-title text-4xl md:text-5xl">Studio Timeline</h2>
+          <h2 className="section-title text-4xl md:text-5xl">{t('timelineTitle')}</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {timeline.map((item) => (
               <article key={item.year} className="cinematic-card">

@@ -4,8 +4,10 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Footer from "@/components/Footer";
 import CountryCodeSelector from "@/components/CountryCodeSelector";
+import { useTranslations } from "next-intl";
 
 function ContactForm() {
+  const t = useTranslations('Contact');
   const searchParams = useSearchParams();
   
   const [formData, setFormData] = useState({
@@ -93,7 +95,7 @@ function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="cinematic-card lg:col-span-3">
-      <h2 className="text-2xl font-bold text-white">Send Message</h2>
+      <h2 className="text-2xl font-bold text-white">{t('sendMessage')}</h2>
 
       {result.type && (
         <div
@@ -112,7 +114,7 @@ function ContactForm() {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          placeholder="Your Name"
+          placeholder={t('name')}
           required
           className="rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
         />
@@ -121,7 +123,7 @@ function ContactForm() {
           type="email"
           value={formData.email}
           onChange={handleChange}
-          placeholder="Your Email"
+          placeholder={t('email')}
           required
           className="rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
         />
@@ -138,7 +140,7 @@ function ContactForm() {
           type="tel"
           value={formData.phone}
           onChange={handleChange}
-          placeholder="Phone Number"
+          placeholder={t('phone')}
           className="flex-1 rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
         />
       </div>
@@ -152,9 +154,9 @@ function ContactForm() {
           required
           className="w-full rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
         >
-          <option value="general">General Signal / Feedback</option>
-          <option value="services">Request a Service (Game Dev / Art / Narrative)</option>
-          <option value="partnership">Business & Co-Development Partnership</option>
+          <option value="general">{t('general')}</option>
+          <option value="services">{t('servicesInquiry')}</option>
+          <option value="partnership">{t('partnership')}</option>
         </select>
       </div>
 
@@ -168,11 +170,11 @@ function ContactForm() {
             required
             className="rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
           >
-            <option value="">Select Service Area</option>
-            <option value="game-dev">Full Game Engineering</option>
-            <option value="animation">3D modeling / Rigging / Animation</option>
-            <option value="design">Narrative & Quest / System Balancing</option>
-            <option value="prototype">Co-Development or Prototyping</option>
+            <option value="">{t('selectService')}</option>
+            <option value="game-dev">{t('gameDevOption')}</option>
+            <option value="animation">{t('animationOption')}</option>
+            <option value="design">{t('designOption')}</option>
+            <option value="prototype">{t('prototypeOption')}</option>
           </select>
           <select
             name="budget"
@@ -181,11 +183,11 @@ function ContactForm() {
             required
             className="rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
           >
-            <option value="">Estimated Budget Range</option>
-            <option value="under-5k">Under $5,000</option>
-            <option value="5k-20k">$5,000 - $20,000</option>
-            <option value="20k-50k">$20,000 - $50,000</option>
-            <option value="50k-plus">$50,000+</option>
+            <option value="">{t('budgetRange')}</option>
+            <option value="under-5k">{t('under5k')}</option>
+            <option value="5k-20k">{t('midRange')}</option>
+            <option value="20k-50k">{t('highRange')}</option>
+            <option value="50k-plus">{t('premiumRange')}</option>
           </select>
         </div>
       )}
@@ -194,7 +196,7 @@ function ContactForm() {
         name="subject"
         value={formData.subject}
         onChange={handleChange}
-        placeholder="Subject"
+        placeholder={t('subject')}
         required
         className="mt-4 w-full rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
       />
@@ -203,29 +205,31 @@ function ContactForm() {
         rows={7}
         value={formData.message}
         onChange={handleChange}
-        placeholder="Tell us what you're building, feeling, or imagining..."
+        placeholder={t('message')}
         required
         className="mt-4 w-full rounded-xl border border-[#dc143c]/30 bg-black/50 px-4 py-3 text-white outline-none focus:border-[#ff7f9a]"
       />
 
       <button type="submit" disabled={isSubmitting} className="gaming-button mt-6 w-full">
-        {isSubmitting ? "Sending Signal..." : "Send Message"}
+        {isSubmitting ? t('sending') : t('sendMessage')}
       </button>
     </form>
   );
 }
 
 export default function ContactPage() {
+  const t = useTranslations('Contact');
+
   return (
     <main className="site-shell">
       <section className="cinematic-hero min-h-[52vh]">
         <div className="hero-overlay"></div>
         <div className="hero-noise"></div>
         <div className="content-wrap relative z-10 text-center">
-          <span className="heading-kicker">Contact</span>
-          <h1 className="section-title text-5xl md:text-6xl">Signal The Abyss</h1>
+          <span className="heading-kicker">{t('heroKicker')}</span>
+          <h1 className="section-title text-5xl md:text-6xl">{t('heroTitle')}</h1>
           <p className="section-subtitle mx-auto max-w-3xl">
-            Collaborations, partnerships, press, or request our development services.
+            {t('heroSubtitle')}
           </p>
         </div>
       </section>
@@ -233,15 +237,15 @@ export default function ContactPage() {
       <section className="section-shell">
         <div className="content-wrap grid gap-6 lg:grid-cols-5">
           <aside className="cinematic-card lg:col-span-2">
-            <h2 className="text-2xl font-bold text-white">Studio Contacts</h2>
+            <h2 className="text-2xl font-bold text-white">{t('studioContacts')}</h2>
             <div className="mt-5 space-y-4 text-white/75">
               <p><span className="text-white font-semibold">Email:</span> contactus@abyssstudios.site</p>
-              <p><span className="text-white font-semibold">Location:</span> Delhi, India</p>
-              <p><span className="text-white font-semibold">Social:</span> @theabyssstudios</p>
+              <p><span className="text-white font-semibold">{t('location')}:</span> Delhi, India</p>
+              <p><span className="text-white font-semibold">{t('social')}:</span> @theabyssstudios</p>
             </div>
             <div className="mt-8">
-              <h3 className="text-sm uppercase tracking-[0.16em] text-white/70">Response Window</h3>
-              <p className="mt-2 text-white/75">Usually within 2-4 business days.</p>
+              <h3 className="text-sm uppercase tracking-[0.16em] text-white/70">{t('responseWindow')}</h3>
+              <p className="mt-2 text-white/75">{t('responseDesc')}</p>
             </div>
           </aside>
 

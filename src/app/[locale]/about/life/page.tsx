@@ -1,54 +1,55 @@
 "use client";
 
-import Image from "next/image";
 import Footer from "@/components/Footer";
-
-const culture = [
-  {
-    title: "Creative Freedom",
-    description: "Every team member has ownership over their craft. We encourage experimentation and bold creative choices.",
-    icon: "🎨"
-  },
-  {
-    title: "Work-Life Harmony",
-    description: "We believe sustainable creativity comes from balance. Flexible hours and remote options when needed.",
-    icon: "⚖️"
-  },
-  {
-    title: "Learning Culture",
-    description: "Weekly game jams, skill-sharing sessions, and access to industry conferences and workshops.",
-    icon: "📚"
-  },
-  {
-    title: "Collaborative Spirit",
-    description: "Cross-disciplinary collaboration is in our DNA. Artists, coders, and designers work as one unit.",
-    icon: "🤝"
-  }
-];
-
-const perks = [
-  "Flexible working hours",
-  "Remote work options",
-  "Creative development budget",
-  "Industry conference access",
-  "Game jam Fridays",
-  "Skill-sharing workshops",
-  "Health and wellness support",
-  "Studio game library access"
-];
+import { useTranslations } from "next-intl";
 
 export default function LifePage() {
+  const t = useTranslations('AboutLife');
+
+  const culture = [
+    {
+      title: t('culture1Title'),
+      description: t('culture1Desc'),
+      icon: "🎨"
+    },
+    {
+      title: t('culture2Title'),
+      description: t('culture2Desc'),
+      icon: "⚖️"
+    },
+    {
+      title: t('culture3Title'),
+      description: t('culture3Desc'),
+      icon: "📚"
+    },
+    {
+      title: t('culture4Title'),
+      description: t('culture4Desc'),
+      icon: "🤝"
+    }
+  ];
+
+  const perks = [
+    t('perk1'),
+    t('perk2'),
+    t('perk3'),
+    t('perk4'),
+    t('perk5'),
+    t('perk6'),
+    t('perk7'),
+    t('perk8')
+  ];
+
   return (
     <main className="site-shell">
       <section className="cinematic-hero min-h-[56vh]">
         <div className="hero-overlay"></div>
         <div className="hero-noise"></div>
         <div className="content-wrap relative z-10 text-center">
-          <span className="heading-kicker">Studio Life</span>
-          <h1 className="section-title text-5xl md:text-6xl">Life at Abyss Studios</h1>
-          <p className="section-subtitle mx-auto max-world-3xl">
-            Where creativity meets community. Experience our unique studio culture built around 
-            collaboration, experimentation, and passion for game development.
+          <span className="heading-kicker">{t('heroKicker')}</span>
+          <h1 className="section-title text-5xl md:text-6xl">{t('heroTitle')}</h1>
+          <p className="section-subtitle mx-auto max-w-3xl">
+            {t('heroSubtitle')}
           </p>
         </div>
       </section>
@@ -56,8 +57,8 @@ export default function LifePage() {
       <section className="section-shell">
         <div className="content-wrap">
           <div className="mb-8">
-            <span className="heading-kicker">Our Culture</span>
-            <h2 className="section-title text-4xl md:text-5xl">How We Work</h2>
+            <span className="heading-kicker">{t('cultureKicker')}</span>
+            <h2 className="section-title text-4xl md:text-5xl">{t('cultureTitle')}</h2>
           </div>
           <div className="grid gap-6 md:grid-cols-2">
             {culture.map((item) => (
@@ -78,8 +79,8 @@ export default function LifePage() {
       <section className="section-shell">
         <div className="content-wrap">
           <div className="mb-8">
-            <span className="heading-kicker">Benefits</span>
-            <h2 className="section-title text-4xl md:text-5xl">Studio Perks</h2>
+            <span className="heading-kicker">{t('perksKicker')}</span>
+            <h2 className="section-title text-4xl md:text-5xl">{t('perksTitle')}</h2>
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {perks.map((perk) => (
@@ -94,14 +95,13 @@ export default function LifePage() {
       <section className="section-shell">
         <div className="content-wrap">
           <div className="cinematic-card">
-            <h2 className="text-3xl font-bold text-white">Join Our Community</h2>
+            <h2 className="text-3xl font-bold text-white">{t('joinTitle')}</h2>
             <p className="mt-4 text-white/75 leading-relaxed">
-              We're always looking for passionate creators who want to build something extraordinary. 
-              Whether you're a seasoned developer or just starting your journey, there's a place for you at Abyss.
+              {t('joinText')}
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <a href="/careers" className="gaming-button">View Open Roles</a>
-              <a href="/contact" className="tag">Get in Touch</a>
+              <a href="/careers" className="gaming-button">{t('viewRoles')}</a>
+              <a href="/contact" className="tag">{t('getInTouch')}</a>
             </div>
           </div>
         </div>
