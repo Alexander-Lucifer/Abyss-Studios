@@ -27,21 +27,33 @@
       "linkedin": "devilincarnate"
     },
     "stats": [
-      { "label": "Commit Frequency", "value": 92 },
-      { "label": "Coffee Intake", "value": 85 },
-      { "label": "Design Focus", "value": 95 },
-      { "label": "Uncanny Resonance", "value": 88 }
+      {
+        "label": "Commit Frequency",
+        "value": 92
+      },
+      {
+        "label": "Coffee Intake",
+        "value": 85
+      },
+      {
+        "label": "Design Focus",
+        "value": 95
+      },
+      {
+        "label": "Uncanny Resonance",
+        "value": 88
+      }
     ],
     "subjectId": "CORE_SUBJECT::01"
   },
   {
     "name": "Daksh Kaushik",
     "role": {
-      "en": "Co-Founder / Art Director",
-      "jp": "共同創設者 / アートディレクター",
-      "zh": "联合创始人 / 艺术总监",
-      "ko": "공동 설립자 / 아트 디렉터",
-      "hi": "सह-संस्थापक / कला निदेशक"
+      "en": "Animation Director",
+      "jp": "アニメーション監督",
+      "zh": "动画导演",
+      "ko": "애니메이션 감독",
+      "hi": "एनीमेशन निदेशक"
     },
     "bio": {
       "en": "Crafting the visual soul and auditory identity of our projects. Daksh designs uncanny spaces and low-frequency sonic structures that define the studio's style.",
@@ -61,10 +73,22 @@
       "linkedin": "daksh-kaushik-28b93628a"
     },
     "stats": [
-      { "label": "Render Precision", "value": 96 },
-      { "label": "Atmosphere Scale", "value": 90 },
-      { "label": "Pixel Perfect Ratio", "value": 94 },
-      { "label": "Aesthetic Coherence", "value": 92 }
+      {
+        "label": "Render Precision",
+        "value": 96
+      },
+      {
+        "label": "Atmosphere Scale",
+        "value": 90
+      },
+      {
+        "label": "Pixel Perfect Ratio",
+        "value": 94
+      },
+      {
+        "label": "Aesthetic Coherence",
+        "value": 92
+      }
     ],
     "subjectId": "CORE_SUBJECT::02"
   }
