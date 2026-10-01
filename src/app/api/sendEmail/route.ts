@@ -4,10 +4,10 @@ import nodemailer from 'nodemailer';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    
+
     // Validate required fields
     const { name, email, subject, message, inquiryType, serviceType, budget } = body;
-    
+
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
         { message: 'All fields are required' },
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     }
 
     console.log('Received contact form submission from:', name, '(', email, ')');
-    
+
     // Format additional fields
     let servicesDetailsText = "";
     let servicesDetailsHtml = "";
@@ -42,6 +42,19 @@ export async function POST(request: Request) {
     } else {
       servicesDetailsText = `Inquiry Type: General Feedback / Inquiry\n\n`;
       servicesDetailsHtml = `<p><strong>Inquiry Type:</strong> General Feedback / Inquiry</p>`;
+    }
+
+    // Check if SMTP is properly configured
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD ||
+        process.env.SMTP_HOST === 'SMTP_HOST' || process.env.SMTP_USER === 'SMTP_USER') {
+      console.log('SMTP not configured, returning error to trigger fallback');
+      return NextResponse.json(
+        {
+          message: 'SMTP not configured - please use mailto fallback',
+          fallback: true
+        },
+        { status: 500 }
+      );
     }
 
     // Create transporter
