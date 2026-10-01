@@ -108,10 +108,29 @@ ${message}
     });
   } catch (error) {
     console.error('Error sending contact email:', error);
+
+    // Check if it's an authentication error - fallback to mailto
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const isAuthError = errorMessage.includes('EAUTH') ||
+                        errorMessage.includes('Invalid login') ||
+                        errorMessage.includes('Authentication failed') ||
+                        errorMessage.includes('535');
+
+    if (isAuthError) {
+      console.log('SMTP authentication failed, returning fallback');
+      return NextResponse.json(
+        {
+          message: 'SMTP authentication failed - please use mailto fallback',
+          fallback: true
+        },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(
-      { 
+      {
         message: 'Failed to send message',
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: errorMessage,
         config: {
           host: process.env.SMTP_HOST,
           port: process.env.SMTP_PORT,
