@@ -84,7 +84,6 @@ function ContactForm() {
 
       if (shouldFallback) {
         console.log("Server requested mailto fallback:", error);
-        const subject = encodeURIComponent(formData.subject || "Collaboration Signal");
       } else {
         // For other errors, show error message to user
         console.error("Server sending failed:", error);
@@ -92,7 +91,8 @@ function ContactForm() {
         setIsSubmitting(false);
         return;
       }
-      
+
+      const subject = encodeURIComponent(formData.subject || "Collaboration Signal");
       let bodyText = `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.countryCode} ${formData.phone}\nInquiry Type: ${formData.inquiryType}`;
       if (formData.inquiryType === "services") {
         bodyText += `\nService Type: ${formData.serviceType}\nBudget Level: ${formData.budget}`;
