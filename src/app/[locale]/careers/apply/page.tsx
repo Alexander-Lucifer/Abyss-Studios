@@ -93,6 +93,11 @@ export default function ApplyPage() {
 
       const data = await response.json();
 
+      // Check if server explicitly requests mailto fallback
+      if (data.fallback) {
+        throw new Error("SMTP not configured - fallback to mailto");
+      }
+
       if (!response.ok) {
         throw new Error(data.message || "Failed to submit application");
       }
@@ -114,9 +119,12 @@ export default function ApplyPage() {
 
     } catch (error) {
       console.error('Error submitting application:', error);
-      
-      // Check if standard submission failed to trigger mailto fallback
-      if (error instanceof Error && error.message.includes("Failed to submit")) {
+
+      // Check if server explicitly requested mailto fallback
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const shouldFallback = errorMessage.includes("fallback") || errorMessage.includes("SMTP not configured");
+
+      if (shouldFallback) {
         const subject = encodeURIComponent(`Application: ${selectedRole} - ${formData.name}`);
         const body = encodeURIComponent(
 `Application Details:

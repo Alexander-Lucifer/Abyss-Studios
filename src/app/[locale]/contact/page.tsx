@@ -56,6 +56,12 @@ function ContactForm() {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
+
+      // Check if server explicitly requests mailto fallback
+      if (data.fallback) {
+        throw new Error("SMTP not configured - fallback to mailto");
+      }
+
       if (!response.ok) {
         throw new Error(data.message || "Failed to send message.");
       }
@@ -72,9 +78,20 @@ function ContactForm() {
         message: "",
       });
     } catch (error) {
-      // Fallback to mailto if server fails
-      console.log("Server sending failed, falling back to mailto:", error);
-      const subject = encodeURIComponent(formData.subject || "Collaboration Signal");
+      // Fallback to mailto only if server explicitly requested it (SMTP not configured)
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const shouldFallback = errorMessage.includes("fallback") || errorMessage.includes("SMTP not configured");
+
+      if (shouldFallback) {
+        console.log("Server requested mailto fallback:", error);
+        const subject = encodeURIComponent(formData.subject || "Collaboration Signal");
+      } else {
+        // For other errors, show error message to user
+        console.error("Server sending failed:", error);
+        setResult({ type: "error", message: errorMessage });
+        setIsSubmitting(false);
+        return;
+      }
       
       let bodyText = `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.countryCode} ${formData.phone}\nInquiry Type: ${formData.inquiryType}`;
       if (formData.inquiryType === "services") {
